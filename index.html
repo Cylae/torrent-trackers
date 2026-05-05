@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Trackers status</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Monitoring trackers</p>
+        <h1>Trackers status</h1>
+      </div>
+      <div class="summary" id="summary">
+        <span class="summary-dot" aria-hidden="true"></span>
+        <span id="summary-text">Chargement</span>
+      </div>
+    </header>
+
+    <section class="meta" aria-label="Informations">
+      <div>
+        <span class="meta-label">Derniere mise a jour</span>
+        <strong id="updated-at">-</strong>
+      </div>
+      <div>
+        <span class="meta-label">Trackers</span>
+        <strong id="target-count">-</strong>
+      </div>
+    </section>
+
+    <section class="status-grid" id="status-grid" aria-label="Etat des trackers"></section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
