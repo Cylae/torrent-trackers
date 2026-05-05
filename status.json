@@ -1,9 +1,10 @@
 {
   "schema_version": 1,
-  "script_version": "2026.05.05.1",
+  "script_version": "2026.05.05.2",
   "site_title": "Trackers status",
-  "updated_at": "2026-05-05T11:13:39.026291+00:00",
+  "updated_at": "2026-05-05T11:19:39.423507+00:00",
   "display_timezone": "Europe/Paris",
+  "retention_days": 30,
   "overall_status": "degraded",
   "targets": [
     {
@@ -19,7 +20,7 @@
       "label": "Forum Torr9",
       "status": "down",
       "down_since": "2026-04-27T11:54:21.106419+00:00",
-      "current_downtime_seconds": 688757,
+      "current_downtime_seconds": 689118,
       "last_error": "La page principale a retourné HTTP 521"
     },
     {
@@ -45,6 +46,16 @@
       "down_since": null,
       "current_downtime_seconds": null,
       "last_error": null
+    }
+  ],
+  "incidents": [
+    {
+      "target_key": "forum",
+      "label": "Forum Torr9",
+      "started_at": "2026-04-27T11:54:21.106419+00:00",
+      "ended_at": null,
+      "duration_seconds": 689118,
+      "last_error": "La page principale a retourné HTTP 521"
     }
   ]
 }
