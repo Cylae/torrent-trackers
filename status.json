@@ -2,7 +2,7 @@
   "schema_version": 1,
   "script_version": "2026.05.05.3",
   "site_title": "Trackers status",
-  "updated_at": "2026-05-05T17:59:42.178377+00:00",
+  "updated_at": "2026-05-05T18:06:16.603938+00:00",
   "display_timezone": "Europe/Paris",
   "retention_days": 30,
   "overall_status": "degraded",
@@ -20,16 +20,16 @@
       "label": "Forum Torr9",
       "status": "down",
       "down_since": "2026-04-27T11:54:21.106419+00:00",
-      "current_downtime_seconds": 713121,
+      "current_downtime_seconds": 713515,
       "last_error": "La page principale a retourné HTTP 521"
     },
     {
       "key": "c411",
       "label": "C411",
-      "status": "up",
-      "down_since": null,
-      "current_downtime_seconds": null,
-      "last_error": null
+      "status": "down",
+      "down_since": "2026-05-05T18:04:56.551076+00:00",
+      "current_downtime_seconds": 80,
+      "last_error": "La page principale a retourné HTTP 500"
     },
     {
       "key": "gemini",
@@ -54,8 +54,16 @@
       "label": "Forum Torr9",
       "started_at": "2026-04-27T11:54:21.106419+00:00",
       "ended_at": null,
-      "duration_seconds": 713121,
+      "duration_seconds": 713515,
       "last_error": "La page principale a retourné HTTP 521"
+    },
+    {
+      "target_key": "c411",
+      "label": "C411",
+      "started_at": "2026-05-05T18:04:56.551076+00:00",
+      "ended_at": null,
+      "duration_seconds": 80,
+      "last_error": "La page principale a retourné HTTP 500"
     }
   ]
 }
