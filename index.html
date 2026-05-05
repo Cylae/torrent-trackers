@@ -29,9 +29,21 @@
         <span class="meta-label">Trackers</span>
         <strong id="target-count">-</strong>
       </div>
+      <div>
+        <span class="meta-label">Retention</span>
+        <strong id="retention-days">30 jours</strong>
+      </div>
     </section>
 
-    <section class="status-grid" id="status-grid" aria-label="Etat des trackers"></section>
+    <nav class="view-tabs" aria-label="Periode">
+      <button class="tab is-active" type="button" data-view="24h">24h</button>
+      <button class="tab" type="button" data-view="7d">7j</button>
+      <button class="tab" type="button" data-view="30d">30j</button>
+    </nav>
+
+    <section class="status-panel is-active" id="view-24h" aria-label="Etat des dernieres 24 heures"></section>
+    <section class="status-panel" id="view-7d" aria-label="Uptime des 7 derniers jours"></section>
+    <section class="status-panel" id="view-30d" aria-label="Uptime des 30 derniers jours"></section>
   </main>
   <script src="app.js"></script>
 </body>
