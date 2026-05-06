@@ -111,6 +111,8 @@ h1 {
 .badge.is-up,
 .subtarget-badge.is-up {
   border-color: #22c55e;
+  background: var(--ok-bg);
+  color: var(--ok);
   box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.8), 0 0 12px rgba(34, 197, 94, 0.45);
 }
 
@@ -118,12 +120,16 @@ h1 {
 .badge.is-down,
 .subtarget-badge.is-down {
   border-color: #ef4444;
+  background: var(--down-bg);
+  color: var(--down);
   animation: badgeGlowDown 1.2s ease-in-out infinite;
 }
 
 .badge.is-degraded,
 .subtarget-badge.is-degraded {
   border-color: #f59e0b;
+  background: var(--warn-bg);
+  color: var(--warn);
   animation: badgeGlowWarn 2.8s ease-in-out infinite;
 }
 
@@ -462,7 +468,7 @@ h1 {
   min-height: 32px;
   padding: 0 10px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.72);
+  background: var(--surface);
   border: 1px solid var(--border);
   font-size: 13px;
   font-weight: 800;
@@ -552,25 +558,335 @@ h1 {
 
 .subtarget-badge {
   flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   min-height: 26px;
   padding: 5px 8px;
   border-radius: 999px;
   border: 1px solid var(--border);
+  background: var(--surface);
   color: var(--muted);
   font-size: 12px;
   font-weight: 800;
 }
 
-.subtarget-badge.is-up {
+.subtarget-badge::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: var(--warn);
+}
+
+.subtarget-badge.is-up::before {
+  background: var(--ok);
+  box-shadow: 0 0 8px rgba(21, 128, 61, 0.7);
+}
+
+.subtarget-badge.is-down::before {
+  background: var(--down);
+  animation: statusPulseDown 1.2s ease-in-out infinite;
+}
+
+.subtarget-badge.is-degraded::before {
+  background: var(--warn);
+  animation: statusPulseWarn 2.8s ease-in-out infinite;
+}
+
+.official-status-panel {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.official-source-link {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 900;
+  text-decoration: underline;
+  text-decoration-color: var(--ok);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+.official-source-link::after {
+  content: "↗";
+  color: var(--muted);
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.official-source-link:not(a)::after {
+  content: "";
+}
+
+.official-source-link:hover {
   color: var(--ok);
 }
 
-.subtarget-badge.is-down {
+.official-graph-toggle {
+  justify-self: start;
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.official-graph-toggle:hover {
+  border-color: var(--ok);
+  color: var(--ok);
+}
+
+.official-service-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 8px;
+}
+
+.official-service {
+  display: grid;
+  gap: 4px;
+  min-height: 56px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.official-service span {
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.official-service strong {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.official-uptime {
+  justify-self: start;
+  padding: 3px 7px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.official-uptime.uptime-excellent {
+  border-color: rgba(34, 197, 94, 0.7);
+  background: var(--ok-bg);
+  color: var(--ok);
+}
+
+.official-uptime.uptime-good {
+  border-color: rgba(20, 184, 166, 0.62);
+  color: #0f766e;
+}
+
+.official-uptime.uptime-degraded {
+  border-color: rgba(245, 158, 11, 0.72);
+  background: var(--warn-bg);
+  color: var(--warn);
+}
+
+.official-uptime.uptime-critical {
+  border-color: rgba(239, 68, 68, 0.72);
+  background: var(--down-bg);
   color: var(--down);
 }
 
-.subtarget-badge.is-degraded {
+.official-service.is-up strong {
+  color: var(--ok);
+}
+
+.official-service.is-down strong {
+  color: var(--down);
+}
+
+.official-service.is-degraded strong {
   color: var(--warn);
+}
+
+.official-service.ping-excellent {
+  border-color: rgba(34, 197, 94, 0.62);
+}
+
+.official-service.ping-excellent strong {
+  color: var(--ok);
+}
+
+.official-service.ping-good {
+  border-color: rgba(20, 184, 166, 0.58);
+}
+
+.official-service.ping-good strong {
+  color: #0f766e;
+}
+
+.official-service.ping-slow {
+  border-color: rgba(245, 158, 11, 0.7);
+}
+
+.official-service.ping-slow strong {
+  color: var(--warn);
+}
+
+.official-service.ping-critical {
+  border-color: rgba(239, 68, 68, 0.72);
+}
+
+.official-service.ping-critical strong {
+  color: var(--down);
+}
+
+.ping-chart {
+  display: grid;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.official-service-list.are-graphs-collapsed .ping-chart {
+  display: none;
+}
+
+.ping-chart-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.ping-chart-head strong {
+  color: var(--muted);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.ping-sparkline {
+  width: 100%;
+  height: 58px;
+  overflow: visible;
+}
+
+.ping-guide {
+  stroke: var(--border);
+  stroke-dasharray: 3 4;
+  stroke-width: 1;
+}
+
+.ping-guide-good {
+  stroke: rgba(34, 197, 94, 0.38);
+}
+
+.ping-guide-warn {
+  stroke: rgba(245, 158, 11, 0.44);
+}
+
+.ping-line {
+  fill: none;
+  stroke: var(--muted);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.ping-line.ping-excellent {
+  stroke: var(--ok);
+}
+
+.ping-line.ping-good {
+  stroke: #0f766e;
+}
+
+.ping-line.ping-slow {
+  stroke: var(--warn);
+}
+
+.ping-line.ping-critical {
+  stroke: var(--down);
+}
+
+.ping-point {
+  fill: var(--muted);
+  stroke: var(--surface);
+  stroke-width: 1.4;
+}
+
+.ping-point.ping-excellent {
+  fill: var(--ok);
+}
+
+.ping-point.ping-good {
+  fill: #0f766e;
+}
+
+.ping-point.ping-slow {
+  fill: var(--warn);
+}
+
+.ping-point.ping-critical {
+  fill: var(--down);
+}
+
+.ping-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  justify-content: flex-end;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.ping-chart-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ping-swatch {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--muted);
+}
+
+.ping-swatch.ping-excellent {
+  background: var(--ok);
+}
+
+.ping-swatch.ping-good {
+  background: #0f766e;
+}
+
+.ping-swatch.ping-slow {
+  background: var(--warn);
+}
+
+.ping-swatch.ping-critical {
+  background: var(--down);
 }
 
 .compact-metrics {
@@ -831,9 +1147,11 @@ h1 {
   .badge.is-down,
   .subtarget-badge.is-down,
   .badge.is-down .status-dot,
+  .subtarget-badge.is-down::before,
   .badge.is-degraded,
   .subtarget-badge.is-degraded,
-  .badge.is-degraded .status-dot {
+  .badge.is-degraded .status-dot,
+  .subtarget-badge.is-degraded::before {
     animation: none;
   }
 }
