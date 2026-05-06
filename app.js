@@ -9,12 +9,16 @@ const summaryText = document.querySelector("#summary-text");
 const updatedAt = document.querySelector("#updated-at");
 const targetCount = document.querySelector("#target-count");
 const retentionDays = document.querySelector("#retention-days");
+const includeUnavailable = document.querySelector("#include-unavailable");
 
 let latestData = null;
+let includeUnavailableData = true;
 
 const targetParents = {
   forum: "torr9"
 };
+
+const historyStart = parseDate("2026-05-05T10:00:00+00:00");
 
 const formatter = new Intl.DateTimeFormat("fr-FR", {
   dateStyle: "medium",
@@ -93,13 +97,28 @@ function statusText(status) {
     return "Hors ligne";
   }
   if (status === "degraded") {
-    return "Degrade";
+    return "Dégradé";
   }
   return "En ligne";
 }
 
 function targetStatus(target) {
   return target.status === "down" ? "down" : "up";
+}
+
+function directChildrenStatus(target) {
+  const children = Array.isArray(target.children) ? target.children : [];
+  if (!children.length) {
+    return targetStatus(target);
+  }
+  const childStatuses = children.map((child) => aggregateStatus(child));
+  if (target.status === "down" && childStatuses.every((status) => status === "down")) {
+    return "down";
+  }
+  if (childStatuses.some((status) => status !== "up")) {
+    return "degraded";
+  }
+  return targetStatus(target);
 }
 
 function aggregateStatus(target) {
@@ -165,6 +184,14 @@ function overlapSeconds(intervals, start, end) {
   }, 0);
 }
 
+function overlappingIntervals(intervals, start, end) {
+  return intervals.filter((interval) => {
+    const overlapStart = Math.max(start.getTime(), interval.start.getTime());
+    const overlapEnd = Math.min(end.getTime(), interval.end.getTime());
+    return overlapEnd > overlapStart;
+  });
+}
+
 function buildHead(target, status = targetStatus(target)) {
   const head = document.createElement("div");
   head.className = "status-head";
@@ -174,7 +201,7 @@ function buildHead(target, status = targetStatus(target)) {
   name.textContent = target.label || target.key || "Tracker";
 
   const badge = document.createElement("span");
-  badge.className = "badge";
+  badge.className = `badge ${statusClass(status)}`;
 
   const dot = document.createElement("span");
   dot.className = "status-dot";
@@ -257,7 +284,7 @@ function buildTimeline(target, data, windowStart, windowEnd, slotSeconds) {
   const intervals = incidentIntervals(data, target.key, windowStart, windowEnd);
   const timeline = document.createElement("div");
   timeline.className = "timeline";
-  timeline.setAttribute("aria-label", `Disponibilite 24h ${target.label}`);
+  timeline.setAttribute("aria-label", `Disponibilité 24h ${target.label}`);
 
   for (let index = 0; index < 48; index += 1) {
     const start = new Date(windowStart.getTime() + index * slotSeconds * 1000);
@@ -273,6 +300,17 @@ function buildTimeline(target, data, windowStart, windowEnd, slotSeconds) {
     } else if (downSeconds > 0) {
       slot.classList.add("is-partial");
     }
+
+    if (downSeconds > 0) {
+      const tooltip = createTooltip(overlappingIntervals(intervals, start, end));
+      slot.setAttribute("tabindex", "0");
+      slot.addEventListener("mouseenter", () => { tooltip.hidden = false; });
+      slot.addEventListener("mouseleave", () => { tooltip.hidden = true; });
+      slot.addEventListener("focus", () => { tooltip.hidden = false; });
+      slot.addEventListener("blur", () => { tooltip.hidden = true; });
+      slot.append(tooltip);
+    }
+
     slot.title = `${formatDate(start)} - ${formatDate(end)}`;
     timeline.append(slot);
   }
@@ -318,11 +356,11 @@ function render24h(data) {
   list.className = "timeline-list";
 
   for (const target of targets) {
-    const status = aggregateStatus(target);
+    const status = directChildrenStatus(target);
     const card = document.createElement("article");
     card.className = `timeline-card ${statusClass(status)}`;
     card.append(
-      buildHead(target, status),
+      buildHead(target),
       buildTimelineEntry(target, data, windowStart, windowEnd, slotSeconds)
     );
     appendTimelineChildren(card, target, data, windowStart, windowEnd, slotSeconds);
@@ -342,7 +380,7 @@ function createTooltip(intervals) {
   tooltip.hidden = true;
 
   const title = document.createElement("strong");
-  title.textContent = intervals.length ? "Incidents detectes" : "Aucun incident";
+  title.textContent = intervals.length ? "Incidents détectés" : "Aucun incident";
   tooltip.append(title);
 
   if (!intervals.length) {
@@ -363,26 +401,170 @@ function createTooltip(intervals) {
   return tooltip;
 }
 
+function showTooltip(tooltip) {
+  tooltip.hidden = false;
+}
+
+function hideTooltip(tooltip) {
+  tooltip.hidden = true;
+}
+
+function bindHoverTooltip(trigger, tooltip) {
+  let hideTimer = null;
+  const show = () => {
+    window.clearTimeout(hideTimer);
+    showTooltip(tooltip);
+  };
+  const hide = () => {
+    hideTimer = window.setTimeout(() => hideTooltip(tooltip), 120);
+  };
+
+  trigger.addEventListener("mouseenter", show);
+  trigger.addEventListener("mouseleave", hide);
+  trigger.addEventListener("focus", show);
+  trigger.addEventListener("blur", hide);
+  tooltip.addEventListener("mouseenter", show);
+  tooltip.addEventListener("mouseleave", hide);
+}
+
+function createUnavailableTooltip(start, end, seconds) {
+  const tooltip = document.createElement("div");
+  tooltip.className = "down-tooltip";
+  tooltip.hidden = true;
+
+  const title = document.createElement("strong");
+  title.textContent = "Données indisponibles";
+
+  const detail = document.createElement("p");
+  detail.textContent = `${formatDate(start)} -> ${formatDate(end)} (${formatDuration(seconds) || "0m"})`;
+
+  tooltip.append(title, detail);
+  return tooltip;
+}
+
+function summaryForMode(metrics, days, mode, compact = false) {
+  const upText = formatDuration(metrics.upSeconds) || "0m";
+  const downText = formatDuration(metrics.downSeconds) || "0m";
+  const unavailableText = formatDuration(metrics.unknownSeconds) || "0m";
+  const periodText = metrics.includeUnavailable
+    ? `${days}j`
+    : `${formatDuration(metrics.knownSeconds) || "0m"} de données`;
+  const unavailableSuffix = metrics.includeUnavailable
+    ? `, ${unavailableText} sans données`
+    : "";
+
+  if (mode === "down") {
+    return {
+      value: percent(metrics.downPct),
+      detail: compact
+        ? `${downText} down${unavailableSuffix} sur ${periodText}`
+        : `${downText} de downtime${unavailableSuffix} sur ${periodText}.`
+    };
+  }
+
+  if (mode === "unknown") {
+    return {
+      value: percent(metrics.unknownPct),
+      detail: compact
+        ? `${unavailableText} sans données sur ${periodText}`
+        : `${unavailableText} sans données sur ${periodText}.`
+    };
+  }
+
+  return {
+    value: percent(metrics.upPct),
+    detail: compact
+      ? `${upText} up${unavailableSuffix} sur ${periodText}`
+      : `${upText} d’uptime${unavailableSuffix} sur ${periodText}.`
+  };
+}
+
+function bindPieSegmentSelection(segments, setSummary) {
+  function select(segment) {
+    for (const item of segments) {
+      item.element.classList.toggle("is-selected", item === segment);
+    }
+    setSummary(segment.mode);
+  }
+
+  for (const segment of segments) {
+    if (!segment.enabled) {
+      segment.element.setAttribute("pointer-events", "none");
+      continue;
+    }
+
+    segment.element.setAttribute("tabindex", "0");
+    segment.element.setAttribute("role", "button");
+    segment.element.setAttribute("aria-label", segment.label);
+    segment.element.addEventListener("click", () => select(segment));
+    segment.element.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        select(segment);
+      }
+    });
+  }
+
+  const initialSegment = segments.find((segment) => segment.mode === "up" && segment.enabled)
+    || segments.find((segment) => segment.enabled);
+  if (initialSegment) {
+    select(initialSegment);
+  }
+}
+
 function uptimeMetrics(target, data, now, windowStart, windowSeconds) {
-  const intervals = incidentIntervals(data, target.key, windowStart, now);
-  const downSeconds = Math.min(windowSeconds, overlapSeconds(intervals, windowStart, now));
-  const downPct = windowSeconds > 0 ? (downSeconds / windowSeconds) * 100 : 0;
+  const knownStart = historyStart && historyStart > windowStart ? historyStart : windowStart;
+  const unknownEnd = new Date(Math.min(knownStart.getTime(), now.getTime()));
+  const rawUnknownSeconds = Math.min(
+    windowSeconds,
+    Math.max(0, (unknownEnd.getTime() - windowStart.getTime()) / 1000)
+  );
+  const prehistoryIntervals = rawUnknownSeconds > 0
+    ? incidentIntervals(data, target.key, windowStart, unknownEnd)
+    : [];
+  const knownPrehistoryDownSeconds = Math.min(
+    rawUnknownSeconds,
+    overlapSeconds(prehistoryIntervals, windowStart, unknownEnd)
+  );
+  const unavailableSeconds = Math.max(0, rawUnknownSeconds - knownPrehistoryDownSeconds);
+  const unknownSeconds = includeUnavailableData ? unavailableSeconds : 0;
+  const knownSeconds = Math.max(0, windowSeconds - unavailableSeconds);
+  const measuredStart = includeUnavailableData ? knownStart : windowStart;
+  const intervals = incidentIntervals(data, target.key, measuredStart, now);
+  const measuredDownSeconds = overlapSeconds(intervals, measuredStart, now);
+  const downSeconds = Math.min(
+    knownSeconds,
+    (includeUnavailableData ? knownPrehistoryDownSeconds : 0) + measuredDownSeconds
+  );
+  const denominatorSeconds = includeUnavailableData ? windowSeconds : Math.max(knownSeconds, 1);
+  const downPct = denominatorSeconds > 0 ? (downSeconds / denominatorSeconds) * 100 : 0;
+  const unknownPct = includeUnavailableData && windowSeconds > 0 ? (unknownSeconds / windowSeconds) * 100 : 0;
+  const upSeconds = Math.max(0, knownSeconds - downSeconds);
+  const upPct = denominatorSeconds > 0 ? (upSeconds / denominatorSeconds) * 100 : 0;
   return {
     downSeconds,
     downPct,
+    includeUnavailable: includeUnavailableData,
     intervals,
-    upPct: Math.max(0, 100 - downPct)
+    knownSeconds,
+    unknownEnd,
+    unknownSeconds,
+    unknownStart: windowStart,
+    unknownPct,
+    upSeconds,
+    upPct
   };
 }
 
 function buildUptimeSubtargetEntry(target, data, days, now, windowStart, windowSeconds) {
-  const { downSeconds, downPct, intervals, upPct } = uptimeMetrics(
+  const metrics = uptimeMetrics(
     target,
     data,
     now,
     windowStart,
     windowSeconds
   );
+  const { downPct, intervals, unknownEnd, unknownPct, unknownSeconds, unknownStart, upPct } = metrics;
   const entry = document.createElement("div");
   entry.className = "uptime-entry is-child is-compact";
 
@@ -403,6 +585,28 @@ function buildUptimeSubtargetEntry(target, data, days, now, windowStart, windowS
   bg.setAttribute("cx", "21");
   bg.setAttribute("cy", "21");
   bg.setAttribute("r", "15.9155");
+  bg.setAttribute("stroke-dasharray", "100 0");
+
+  const up = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+  up.setAttribute("class", "pie-up");
+  up.setAttribute("cx", "21");
+  up.setAttribute("cy", "21");
+  up.setAttribute("r", "15.9155");
+  up.setAttribute("stroke-dasharray", `${upPct} ${100 - upPct}`);
+  up.setAttribute("stroke-dashoffset", `${-(unknownPct + downPct)}`);
+
+  const unknown = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+  unknown.setAttribute("class", "pie-unknown");
+  unknown.setAttribute("cx", "21");
+  unknown.setAttribute("cy", "21");
+  unknown.setAttribute("r", "15.9155");
+  unknown.setAttribute("stroke-dasharray", `${unknownPct} ${100 - unknownPct}`);
+  unknown.setAttribute("stroke-dashoffset", "0");
+
+  const unavailableTooltip = createUnavailableTooltip(unknownStart, unknownEnd, unknownSeconds);
+  if (unknownPct > 0) {
+    bindHoverTooltip(unknown, unavailableTooltip);
+  }
 
   const down = document.createElementNS("http://www.w3.org/2000/svg", "circle");
   down.setAttribute("class", "pie-down");
@@ -410,21 +614,15 @@ function buildUptimeSubtargetEntry(target, data, days, now, windowStart, windowS
   down.setAttribute("cy", "21");
   down.setAttribute("r", "15.9155");
   down.setAttribute("stroke-dasharray", `${downPct} ${100 - downPct}`);
-  down.setAttribute("stroke-dashoffset", "0");
+  down.setAttribute("stroke-dashoffset", `${-unknownPct}`);
 
   const tooltip = createTooltip(intervals);
   if (downPct > 0) {
-    down.setAttribute("tabindex", "0");
-    down.addEventListener("mouseenter", () => { tooltip.hidden = false; });
-    down.addEventListener("mouseleave", () => { tooltip.hidden = true; });
-    down.addEventListener("focus", () => { tooltip.hidden = false; });
-    down.addEventListener("blur", () => { tooltip.hidden = true; });
-  } else {
-    down.setAttribute("pointer-events", "none");
+    bindHoverTooltip(down, tooltip);
   }
 
-  svg.append(bg, down);
-  pieWrap.append(svg, tooltip);
+  svg.append(bg, unknown, down, up);
+  pieWrap.append(svg, unavailableTooltip, tooltip);
 
   const content = document.createElement("div");
   content.className = "compact-uptime-content";
@@ -434,13 +632,21 @@ function buildUptimeSubtargetEntry(target, data, days, now, windowStart, windowS
   facts.className = "compact-metrics";
 
   const uptime = document.createElement("span");
-  uptime.textContent = `${percent(upPct)} uptime`;
-
   const downtime = document.createElement("span");
-  downtime.textContent = `${formatDuration(downSeconds) || "0m"} down sur ${days}j`;
 
   facts.append(uptime, downtime);
   content.append(facts);
+
+  const setSummary = (mode) => {
+    const summary = summaryForMode(metrics, days, mode, true);
+    uptime.textContent = mode === "up" ? `${summary.value} uptime` : summary.value;
+    downtime.textContent = summary.detail;
+  };
+  bindPieSegmentSelection([
+    { element: up, enabled: upPct > 0, label: "Focus uptime", mode: "up" },
+    { element: down, enabled: downPct > 0, label: "Focus downtime", mode: "down" },
+    { element: unknown, enabled: unknownPct > 0, label: "Focus données indisponibles", mode: "unknown" }
+  ], setSummary);
 
   row.append(pieWrap, content);
   entry.append(row);
@@ -448,13 +654,14 @@ function buildUptimeSubtargetEntry(target, data, days, now, windowStart, windowS
 }
 
 function buildUptimeEntry(target, data, days, now, windowStart, windowSeconds) {
-  const { downSeconds, downPct, intervals, upPct } = uptimeMetrics(
+  const metrics = uptimeMetrics(
     target,
     data,
     now,
     windowStart,
     windowSeconds
   );
+  const { downPct, intervals, unknownEnd, unknownPct, unknownSeconds, unknownStart, upPct } = metrics;
   const entry = document.createElement("div");
   entry.className = "uptime-entry";
 
@@ -475,6 +682,28 @@ function buildUptimeEntry(target, data, days, now, windowStart, windowSeconds) {
   bg.setAttribute("cx", "21");
   bg.setAttribute("cy", "21");
   bg.setAttribute("r", "15.9155");
+  bg.setAttribute("stroke-dasharray", "100 0");
+
+  const up = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+  up.setAttribute("class", "pie-up");
+  up.setAttribute("cx", "21");
+  up.setAttribute("cy", "21");
+  up.setAttribute("r", "15.9155");
+  up.setAttribute("stroke-dasharray", `${upPct} ${100 - upPct}`);
+  up.setAttribute("stroke-dashoffset", `${-(unknownPct + downPct)}`);
+
+  const unknown = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+  unknown.setAttribute("class", "pie-unknown");
+  unknown.setAttribute("cx", "21");
+  unknown.setAttribute("cy", "21");
+  unknown.setAttribute("r", "15.9155");
+  unknown.setAttribute("stroke-dasharray", `${unknownPct} ${100 - unknownPct}`);
+  unknown.setAttribute("stroke-dashoffset", "0");
+
+  const unavailableTooltip = createUnavailableTooltip(unknownStart, unknownEnd, unknownSeconds);
+  if (unknownPct > 0) {
+    bindHoverTooltip(unknown, unavailableTooltip);
+  }
 
   const down = document.createElementNS("http://www.w3.org/2000/svg", "circle");
   down.setAttribute("class", "pie-down");
@@ -482,36 +711,39 @@ function buildUptimeEntry(target, data, days, now, windowStart, windowSeconds) {
   down.setAttribute("cy", "21");
   down.setAttribute("r", "15.9155");
   down.setAttribute("stroke-dasharray", `${downPct} ${100 - downPct}`);
-  down.setAttribute("stroke-dashoffset", "0");
+  down.setAttribute("stroke-dashoffset", `${-unknownPct}`);
 
   const tooltip = createTooltip(intervals);
   if (downPct > 0) {
-    down.setAttribute("tabindex", "0");
-    down.addEventListener("mouseenter", () => { tooltip.hidden = false; });
-    down.addEventListener("mouseleave", () => { tooltip.hidden = true; });
-    down.addEventListener("focus", () => { tooltip.hidden = false; });
-    down.addEventListener("blur", () => { tooltip.hidden = true; });
-  } else {
-    down.setAttribute("pointer-events", "none");
+    bindHoverTooltip(down, tooltip);
   }
 
-  svg.append(bg, down);
+  svg.append(bg, unknown, down, up);
 
   const center = document.createElement("div");
   center.className = "pie-center";
   center.textContent = percent(upPct);
 
-  pieWrap.append(svg, center, tooltip);
+  pieWrap.append(svg, center, unavailableTooltip, tooltip);
 
   const metric = document.createElement("div");
   metric.className = "metric";
   const metricValue = document.createElement("strong");
-  metricValue.textContent = percent(upPct);
   const metricDetail = document.createElement("p");
   metricDetail.className = "detail";
-  const downText = formatDuration(downSeconds) || "0m";
-  metricDetail.textContent = `${downText} de downtime sur ${days}j.`;
   metric.append(metricValue, metricDetail);
+
+  const setSummary = (mode) => {
+    const summary = summaryForMode(metrics, days, mode);
+    metricValue.textContent = summary.value;
+    metricDetail.textContent = summary.detail;
+    center.textContent = summary.value;
+  };
+  bindPieSegmentSelection([
+    { element: up, enabled: upPct > 0, label: "Focus uptime", mode: "up" },
+    { element: down, enabled: downPct > 0, label: "Focus downtime", mode: "down" },
+    { element: unknown, enabled: unknownPct > 0, label: "Focus données indisponibles", mode: "unknown" }
+  ], setSummary);
 
   row.append(pieWrap, metric);
   entry.append(row);
@@ -554,7 +786,7 @@ function renderUptime(data, days, panel) {
   grid.className = "uptime-grid";
 
   for (const target of targets) {
-    const status = aggregateStatus(target);
+    const status = directChildrenStatus(target);
     const childrenPanel = buildUptimeChildrenPanel(target, data, days, now, windowStart, windowSeconds);
     const body = document.createElement("div");
     body.className = `uptime-card-body${childrenPanel ? " has-children" : ""}`;
@@ -565,7 +797,7 @@ function renderUptime(data, days, panel) {
 
     const card = document.createElement("article");
     card.className = `uptime-card ${statusClass(status)}${childrenPanel ? " has-children" : ""}`;
-    card.append(buildHead(target, status), body);
+    card.append(buildHead(target), body);
     grid.append(card);
   }
 
@@ -580,7 +812,7 @@ function render(data) {
 
   summary.classList.toggle("is-up", !hasDown);
   summary.classList.toggle("is-down", hasDown);
-  summaryText.textContent = hasDown ? "Incident en cours" : "Operationnel";
+  summaryText.textContent = hasDown ? "Incident en cours" : "Opérationnel";
   updatedAt.textContent = formatDate(data.updated_at);
   targetCount.textContent = String(targetTree.length);
   retentionDays.textContent = `${data.retention_days || 30} jours`;
@@ -597,6 +829,15 @@ for (const tab of tabs) {
     for (const [name, panel] of Object.entries(panels)) {
       panel.classList.toggle("is-active", name === view);
     }
+    if (latestData) {
+      render(latestData);
+    }
+  });
+}
+
+if (includeUnavailable) {
+  includeUnavailable.addEventListener("change", () => {
+    includeUnavailableData = includeUnavailable.checked;
     if (latestData) {
       render(latestData);
     }

@@ -14,6 +14,7 @@
   --down-bg: #fee2e2;
   --warn: #a16207;
   --warn-bg: #fef3c7;
+  --unknown: #94a3b8;
   --shadow: 0 16px 40px rgba(22, 32, 51, 0.08);
 }
 
@@ -90,20 +91,98 @@ h1 {
 }
 
 .summary.is-up .summary-dot,
-.timeline-card.is-up .status-dot,
-.uptime-card.is-up .status-dot {
+.badge.is-up .status-dot {
   background: var(--ok);
+  box-shadow: 0 0 10px rgba(21, 128, 61, 0.8);
 }
 
 .summary.is-down .summary-dot,
-.timeline-card.is-down .status-dot,
-.uptime-card.is-down .status-dot {
+.badge.is-down .status-dot {
   background: var(--down);
+  animation: statusPulseDown 1.2s ease-in-out infinite;
 }
 
-.timeline-card.is-degraded .status-dot,
-.uptime-card.is-degraded .status-dot {
+.badge.is-degraded .status-dot {
   background: var(--warn);
+  animation: statusPulseWarn 2.8s ease-in-out infinite;
+}
+
+.summary.is-up,
+.badge.is-up,
+.subtarget-badge.is-up {
+  border-color: #22c55e;
+  box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.8), 0 0 12px rgba(34, 197, 94, 0.45);
+}
+
+.summary.is-down,
+.badge.is-down,
+.subtarget-badge.is-down {
+  border-color: #ef4444;
+  animation: badgeGlowDown 1.2s ease-in-out infinite;
+}
+
+.badge.is-degraded,
+.subtarget-badge.is-degraded {
+  border-color: #f59e0b;
+  animation: badgeGlowWarn 2.8s ease-in-out infinite;
+}
+
+.timeline-card.is-up,
+.uptime-card.is-up {
+  border-color: #22c55e;
+  box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.45), 0 0 14px rgba(34, 197, 94, 0.22), var(--shadow);
+}
+
+.timeline-card.is-degraded,
+.uptime-card.is-degraded {
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.6), 0 0 18px rgba(245, 158, 11, 0.38), var(--shadow);
+}
+
+.timeline-card.is-down,
+.uptime-card.is-down {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.6), 0 0 18px rgba(239, 68, 68, 0.38), var(--shadow);
+}
+
+@keyframes statusPulseWarn {
+  0%, 100% {
+    box-shadow: 0 0 7px rgba(245, 158, 11, 0.55);
+  }
+
+  50% {
+    box-shadow: 0 0 15px rgba(245, 158, 11, 0.95);
+  }
+}
+
+@keyframes statusPulseDown {
+  0%, 100% {
+    box-shadow: 0 0 7px rgba(239, 68, 68, 0.65);
+  }
+
+  50% {
+    box-shadow: 0 0 18px rgba(239, 68, 68, 1);
+  }
+}
+
+@keyframes badgeGlowWarn {
+  0%, 100% {
+    box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.65), 0 0 8px rgba(245, 158, 11, 0.35);
+  }
+
+  50% {
+    box-shadow: 0 0 0 1px rgba(245, 158, 11, 1), 0 0 18px rgba(245, 158, 11, 0.8);
+  }
+}
+
+@keyframes badgeGlowDown {
+  0%, 100% {
+    box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.7), 0 0 9px rgba(239, 68, 68, 0.45);
+  }
+
+  50% {
+    box-shadow: 0 0 0 1px rgba(239, 68, 68, 1), 0 0 20px rgba(239, 68, 68, 0.95);
+  }
 }
 
 .meta {
@@ -136,8 +215,8 @@ h1 {
 .view-tabs {
   display: inline-flex;
   gap: 4px;
+  margin: 0 0 12px;
   padding: 4px;
-  margin: 0 0 18px;
   border: 1px solid var(--border);
   border-radius: 8px;
   background: var(--surface);
@@ -160,6 +239,36 @@ h1 {
 .tab.is-active {
   background: var(--text);
   color: var(--surface);
+}
+
+.history-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.history-toggle input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--unknown);
+  cursor: pointer;
+}
+
+.history-note {
+  margin: -4px 0 18px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.45;
+  text-decoration: underline;
+  text-decoration-color: var(--warn);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
 }
 
 .status-panel {
@@ -203,6 +312,24 @@ h1 {
 .timeline-card.is-degraded,
 .uptime-card.is-degraded {
   background: linear-gradient(180deg, var(--warn-bg), var(--surface) 58%);
+}
+
+.timeline-card.is-up,
+.uptime-card.is-up {
+  border-color: #22c55e;
+  box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.45), 0 0 14px rgba(34, 197, 94, 0.22), var(--shadow);
+}
+
+.timeline-card.is-degraded,
+.uptime-card.is-degraded {
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.6), 0 0 18px rgba(245, 158, 11, 0.38), var(--shadow);
+}
+
+.timeline-card.is-down,
+.uptime-card.is-down {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.6), 0 0 18px rgba(239, 68, 68, 0.38), var(--shadow);
 }
 
 .status-head {
@@ -472,7 +599,9 @@ h1 {
   transform: rotate(-90deg);
 }
 
+.pie.mini-pie .pie-up,
 .pie.mini-pie .pie-bg,
+.pie.mini-pie .pie-unknown,
 .pie.mini-pie .pie-down {
   stroke-width: 10;
 }
@@ -498,8 +627,27 @@ h1 {
 
 .pie-bg {
   fill: none;
-  stroke: var(--ok);
+  stroke: rgba(148, 163, 184, 0.18);
   stroke-width: 8;
+  outline: none;
+}
+
+.pie-up {
+  fill: none;
+  stroke: var(--ok);
+  stroke-linecap: butt;
+  stroke-width: 8;
+  cursor: pointer;
+  outline: none;
+}
+
+.pie-unknown {
+  fill: none;
+  stroke: var(--unknown);
+  stroke-linecap: butt;
+  stroke-width: 8;
+  cursor: pointer;
+  outline: none;
 }
 
 .pie-down {
@@ -507,7 +655,33 @@ h1 {
   stroke: var(--down);
   stroke-linecap: butt;
   stroke-width: 8;
-  cursor: help;
+  cursor: pointer;
+  outline: none;
+}
+
+.pie-up,
+.pie-unknown,
+.pie-down {
+  transition: opacity 160ms ease, stroke-width 160ms ease;
+}
+
+.pie:has(.is-selected) .pie-up:not(.is-selected),
+.pie:has(.is-selected) .pie-unknown:not(.is-selected),
+.pie:has(.is-selected) .pie-down:not(.is-selected) {
+  opacity: 0.48;
+}
+
+.pie-up.is-selected,
+.pie-unknown.is-selected,
+.pie-down.is-selected {
+  opacity: 1;
+  stroke-width: 9;
+}
+
+.pie-up:focus-visible,
+.pie-unknown:focus-visible,
+.pie-down:focus-visible {
+  stroke-width: 9;
 }
 
 .pie-center {
@@ -547,6 +721,11 @@ h1 {
 .down-tooltip strong {
   display: block;
   margin-bottom: 8px;
+}
+
+.down-tooltip p {
+  margin: 0;
+  line-height: 1.35;
 }
 
 .down-tooltip ul {
@@ -644,5 +823,17 @@ h1 {
     padding-top: 14px;
     border-left: 0;
     border-top: 2px solid var(--border);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .summary.is-down,
+  .badge.is-down,
+  .subtarget-badge.is-down,
+  .badge.is-down .status-dot,
+  .badge.is-degraded,
+  .subtarget-badge.is-degraded,
+  .badge.is-degraded .status-dot {
+    animation: none;
   }
 }
