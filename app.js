@@ -21,8 +21,6 @@ const targetParents = {
   forum: "torr9"
 };
 
-const historyStart = parseDate("2026-05-05T10:00:00+00:00");
-
 const formatter = new Intl.DateTimeFormat("fr-FR", {
   dateStyle: "medium",
   timeStyle: "medium"
@@ -51,6 +49,10 @@ function parseDate(value) {
   }
   const date = new Date(value);
   return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function targetHistoryStart(target, data) {
+  return parseDate(target.history_started_at) || parseDate(data.history_started_at);
 }
 
 function formatDuration(seconds) {
@@ -109,12 +111,261 @@ function targetStatus(target) {
   return target.status === "down" ? "down" : "up";
 }
 
-function directChildrenStatus(target) {
+function externalServiceStatus(service) {
+  if (service.status === "down") {
+    return "down";
+  }
+  if (service.status === "degraded") {
+    return "degraded";
+  }
+  return "up";
+}
+
+function externalStatus(entry) {
+  const services = Array.isArray(entry.services) ? entry.services : [];
+  const statuses = services.map((service) => externalServiceStatus(service));
+
+  if (!statuses.length) {
+    return externalServiceStatus(entry);
+  }
+
+  if (statuses.every((status) => status === "down")) {
+    return "down";
+  }
+  if (statuses.some((status) => status !== "up")) {
+    return "degraded";
+  }
+  return "up";
+}
+
+function externalStatusesForTarget(data, targetKey) {
+  const statuses = Array.isArray(data.external_status) ? data.external_status : [];
+  return statuses.filter((entry) => entry.target_key === targetKey);
+}
+
+function pingClass(pingMs) {
+  if (!Number.isFinite(pingMs)) {
+    return "";
+  }
+  if (pingMs <= 100) {
+    return "ping-excellent";
+  }
+  if (pingMs <= 300) {
+    return "ping-good";
+  }
+  if (pingMs <= 800) {
+    return "ping-slow";
+  }
+  return "ping-critical";
+}
+
+function uptimeClass(uptimePercent) {
+  if (!Number.isFinite(uptimePercent)) {
+    return "";
+  }
+  if (uptimePercent >= 99.9) {
+    return "uptime-excellent";
+  }
+  if (uptimePercent >= 99) {
+    return "uptime-good";
+  }
+  if (uptimePercent >= 95) {
+    return "uptime-degraded";
+  }
+  return "uptime-critical";
+}
+
+function formatUptimePercent(value) {
+  if (!Number.isFinite(value)) {
+    return null;
+  }
+  const precision = value >= 99.9 ? 2 : 1;
+  return `${value.toFixed(precision).replace(".", ",")} %`;
+}
+
+function formatProviderName(provider) {
+  if (provider === "uptime-kuma") {
+    return "Uptime Kuma";
+  }
+  return provider || "Status";
+}
+
+function officialSiteLabel(entry, target) {
+  const rawLabel = entry.label || target.label || target.key || "";
+  return rawLabel
+    .replace(/^statut\s+officiel\s+/i, "")
+    .replace(/^status\s+official\s+/i, "")
+    .trim();
+}
+
+function pingHistoryPoints(service) {
+  const history = Array.isArray(service.ping_history) ? service.ping_history : [];
+  return history
+    .map((point) => ({
+      timestamp: parseDate(point.timestamp),
+      status: point.status,
+      pingMs: Number.isFinite(point.ping_ms) ? point.ping_ms : null
+    }))
+    .filter((point) => point.timestamp)
+    .sort((a, b) => a.timestamp - b.timestamp);
+}
+
+function percentile(values, ratio) {
+  if (!values.length) {
+    return 0;
+  }
+  const sorted = [...values].sort((a, b) => a - b);
+  const index = Math.min(sorted.length - 1, Math.max(0, Math.ceil(sorted.length * ratio) - 1));
+  return sorted[index];
+}
+
+function buildPingSparkline(service) {
+  const points = pingHistoryPoints(service);
+  if (points.length < 2) {
+    return null;
+  }
+
+  const validPings = points
+    .map((point) => point.pingMs)
+    .filter((value) => Number.isFinite(value));
+  if (!validPings.length) {
+    return null;
+  }
+
+  const width = 240;
+  const height = 58;
+  const padX = 4;
+  const padY = 6;
+  const minTime = points[0].timestamp.getTime();
+  const maxTime = points[points.length - 1].timestamp.getTime();
+  const timeRange = Math.max(1, maxTime - minTime);
+  const p95 = percentile(validPings, 0.95);
+  const maxPing = Math.max(100, Math.min(Math.max(...validPings), Math.max(p95 * 1.35, 300)));
+
+  function xFor(point) {
+    return padX + ((point.timestamp.getTime() - minTime) / timeRange) * (width - padX * 2);
+  }
+
+  function yFor(pingMs) {
+    const clamped = Math.min(maxPing, Math.max(0, pingMs));
+    return height - padY - (clamped / maxPing) * (height - padY * 2);
+  }
+
+  const segments = [];
+  let current = [];
+  for (const point of points) {
+    if (!Number.isFinite(point.pingMs) || point.status === "down") {
+      if (current.length > 1) {
+        segments.push(current);
+      }
+      current = [];
+      continue;
+    }
+    current.push({
+      x: xFor(point),
+      y: yFor(point.pingMs),
+      pingMs: point.pingMs
+    });
+  }
+  if (current.length > 1) {
+    segments.push(current);
+  }
+
+  const wrap = document.createElement("div");
+  wrap.className = "ping-chart";
+
+  const head = document.createElement("div");
+  head.className = "ping-chart-head";
+
+  const label = document.createElement("span");
+  label.textContent = "Ping history";
+
+  const stats = document.createElement("strong");
+  const avg = Math.round(validPings.reduce((sum, value) => sum + value, 0) / validPings.length);
+  const latest = validPings.at(-1);
+  stats.textContent = `avg ${avg} ms · last ${latest} ms`;
+  head.append(label, stats);
+
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("class", "ping-sparkline");
+  svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+  svg.setAttribute("role", "img");
+  svg.setAttribute("aria-label", `Historique ping ${service.label || service.key || "service"}`);
+
+  const guide100 = document.createElementNS("http://www.w3.org/2000/svg", "line");
+  guide100.setAttribute("class", "ping-guide ping-guide-good");
+  guide100.setAttribute("x1", String(padX));
+  guide100.setAttribute("x2", String(width - padX));
+  guide100.setAttribute("y1", yFor(100).toFixed(1));
+  guide100.setAttribute("y2", yFor(100).toFixed(1));
+
+  const guide300 = document.createElementNS("http://www.w3.org/2000/svg", "line");
+  guide300.setAttribute("class", "ping-guide ping-guide-warn");
+  guide300.setAttribute("x1", String(padX));
+  guide300.setAttribute("x2", String(width - padX));
+  guide300.setAttribute("y1", yFor(300).toFixed(1));
+  guide300.setAttribute("y2", yFor(300).toFixed(1));
+
+  svg.append(guide100, guide300);
+
+  for (const segment of segments) {
+    for (let index = 1; index < segment.length; index += 1) {
+      const previous = segment[index - 1];
+      const currentPoint = segment[index];
+      const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      const segmentPing = Math.max(previous.pingMs, currentPoint.pingMs);
+      line.setAttribute("class", `ping-line ${pingClass(segmentPing)}`);
+      line.setAttribute("x1", previous.x.toFixed(1));
+      line.setAttribute("y1", previous.y.toFixed(1));
+      line.setAttribute("x2", currentPoint.x.toFixed(1));
+      line.setAttribute("y2", currentPoint.y.toFixed(1));
+      svg.append(line);
+    }
+  }
+
+  for (const point of points) {
+    if (!Number.isFinite(point.pingMs)) {
+      continue;
+    }
+    const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    dot.setAttribute("class", `ping-point ${pingClass(point.pingMs)}`);
+    dot.setAttribute("cx", xFor(point).toFixed(1));
+    dot.setAttribute("cy", yFor(point.pingMs).toFixed(1));
+    dot.setAttribute("r", point.pingMs > maxPing ? "2.9" : "2.2");
+    const title = document.createElementNS("http://www.w3.org/2000/svg", "title");
+    title.textContent = `${formatDate(point.timestamp)} · ${point.pingMs} ms`;
+    dot.append(title);
+    svg.append(dot);
+  }
+
+  wrap.append(head, svg);
+  return wrap;
+}
+
+function buildPingLegend() {
+  const legend = document.createElement("div");
+  legend.className = "ping-chart-legend";
+  legend.innerHTML = `
+    <span><i class="ping-swatch ping-excellent"></i>&le;100ms</span>
+    <span><i class="ping-swatch ping-good"></i>&le;300ms</span>
+    <span><i class="ping-swatch ping-slow"></i>&le;800ms</span>
+    <span><i class="ping-swatch ping-critical"></i>&gt;800ms</span>
+  `;
+  return legend;
+}
+
+function directChildrenStatus(target, includeExternal = true) {
   const children = Array.isArray(target.children) ? target.children : [];
-  if (!children.length) {
+  const externalStatuses = includeExternal
+    ? (target.external_status || []).map((entry) => externalStatus(entry))
+    : [];
+  if (!children.length && !externalStatuses.length) {
     return targetStatus(target);
   }
-  const childStatuses = children.map((child) => aggregateStatus(child));
+  const childStatuses = [
+    ...children.map((child) => aggregateStatus(child, includeExternal)),
+    ...externalStatuses
+  ];
   if (target.status === "down" && childStatuses.every((status) => status === "down")) {
     return "down";
   }
@@ -124,12 +375,15 @@ function directChildrenStatus(target) {
   return targetStatus(target);
 }
 
-function aggregateStatus(target) {
+function aggregateStatus(target, includeExternal = true) {
   if (target.status === "down") {
     return "down";
   }
   const children = Array.isArray(target.children) ? target.children : [];
-  return children.some((child) => aggregateStatus(child) !== "up") ? "degraded" : "up";
+  const hasChildIssue = children.some((child) => aggregateStatus(child, includeExternal) !== "up");
+  const hasExternalIssue = includeExternal
+    && (target.external_status || []).some((entry) => externalStatus(entry) !== "up");
+  return hasChildIssue || hasExternalIssue ? "degraded" : "up";
 }
 
 function getTargetTree(data) {
@@ -138,7 +392,11 @@ function getTargetTree(data) {
   const roots = [];
 
   for (const target of targets) {
-    byKey.set(target.key, { ...target, children: [] });
+    byKey.set(target.key, {
+      ...target,
+      children: [],
+      external_status: externalStatusesForTarget(data, target.key)
+    });
   }
 
   for (const target of targets) {
@@ -246,6 +504,98 @@ function buildStatusDetail(target) {
     detail.textContent = "Aucun incident en cours.";
   }
   return detail;
+}
+
+function buildExternalStatusPanel(target) {
+  const entries = Array.isArray(target.external_status) ? target.external_status : [];
+  if (!entries.length) {
+    return null;
+  }
+
+  const panel = document.createElement("section");
+  panel.className = "official-status-panel";
+
+  for (const entry of entries) {
+    const title = document.createElement(entry.status_url ? "a" : "div");
+    title.className = "official-source-link";
+    title.textContent = `${formatProviderName(entry.provider)} Officiel ${officialSiteLabel(entry, target)}`;
+    if (entry.status_url) {
+      title.href = entry.status_url;
+      title.target = "_blank";
+      title.rel = "noopener noreferrer";
+    }
+    panel.append(title);
+
+    const services = Array.isArray(entry.services) ? entry.services : [];
+    if (services.length) {
+      const list = document.createElement("div");
+      list.className = "official-service-list";
+      if (entry.status_url) {
+        list.dataset.statusUrl = entry.status_url;
+      }
+      let hasPingCharts = false;
+
+      for (const service of services) {
+        const serviceStatus = externalServiceStatus(service);
+        const item = document.createElement("div");
+        item.className = `official-service ${statusClass(serviceStatus)}`;
+
+        const serviceLabel = document.createElement("span");
+        serviceLabel.textContent = service.label || service.key || "Service";
+
+        const serviceMeta = document.createElement("strong");
+        serviceMeta.textContent = Number.isFinite(service.ping_ms)
+          ? `${statusText(serviceStatus)} · ${service.ping_ms} ms`
+          : statusText(serviceStatus);
+
+        const uptimeText = formatUptimePercent(service.uptime_24h_percent);
+        if (uptimeText) {
+          const uptime = document.createElement("em");
+          uptime.className = `official-uptime ${uptimeClass(service.uptime_24h_percent)}`;
+          uptime.textContent = `Uptime 24h ${uptimeText}`;
+          item.append(serviceLabel, serviceMeta, uptime);
+        } else {
+          item.append(serviceLabel, serviceMeta);
+        }
+        item.classList.add(pingClass(service.ping_ms));
+        const chart = buildPingSparkline(service);
+        if (chart) {
+          item.append(chart);
+          hasPingCharts = true;
+        }
+        list.append(item);
+      }
+
+      let legend = null;
+      if (hasPingCharts) {
+        const toggle = document.createElement("button");
+        toggle.className = "official-graph-toggle";
+        toggle.type = "button";
+        toggle.setAttribute("aria-expanded", "true");
+        toggle.textContent = "Masquer les graphes";
+        legend = buildPingLegend();
+        toggle.addEventListener("click", () => {
+          const collapsed = list.classList.toggle("are-graphs-collapsed");
+          if (legend) {
+            legend.hidden = collapsed;
+          }
+          toggle.setAttribute("aria-expanded", String(!collapsed));
+          toggle.textContent = collapsed ? "Afficher les graphes" : "Masquer les graphes";
+        });
+        panel.append(toggle);
+      }
+
+      panel.append(list);
+      if (legend) {
+        panel.append(legend);
+      }
+    }
+  }
+
+  if (!panel.childElementCount) {
+    return null;
+  }
+  return panel;
 }
 
 function isTimelineMarker(date) {
@@ -367,6 +717,10 @@ function render24h(data) {
       buildTimelineEntry(target, data, windowStart, windowEnd, slotSeconds)
     );
     appendTimelineChildren(card, target, data, windowStart, windowEnd, slotSeconds);
+    const externalPanel = buildExternalStatusPanel(target);
+    if (externalPanel) {
+      card.append(externalPanel);
+    }
     list.append(card);
   }
 
@@ -516,6 +870,7 @@ function bindPieSegmentSelection(segments, setSummary) {
 }
 
 function uptimeMetrics(target, data, now, windowStart, windowSeconds) {
+  const historyStart = targetHistoryStart(target, data);
   const knownStart = historyStart && historyStart > windowStart ? historyStart : windowStart;
   const unknownEnd = new Date(Math.min(knownStart.getTime(), now.getTime()));
   const rawUnknownSeconds = Math.min(
@@ -789,7 +1144,7 @@ function renderUptime(data, days, panel) {
   grid.className = "uptime-grid";
 
   for (const target of targets) {
-    const status = directChildrenStatus(target);
+    const status = directChildrenStatus(target, false);
     const childrenPanel = buildUptimeChildrenPanel(target, data, days, now, windowStart, windowSeconds);
     const body = document.createElement("div");
     body.className = `uptime-card-body${childrenPanel ? " has-children" : ""}`;
