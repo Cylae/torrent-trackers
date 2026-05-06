@@ -13,6 +13,9 @@ const includeUnavailable = document.querySelector("#include-unavailable");
 
 let latestData = null;
 let includeUnavailableData = true;
+let statusRefreshInFlight = false;
+
+const refreshIntervalMs = 30000;
 
 const targetParents = {
   forum: "torr9"
@@ -845,6 +848,11 @@ if (includeUnavailable) {
 }
 
 async function loadStatus() {
+  if (statusRefreshInFlight) {
+    return;
+  }
+
+  statusRefreshInFlight = true;
   try {
     const response = await fetch(`status.json?ts=${Date.now()}`, { cache: "no-store" });
     if (!response.ok) {
@@ -859,8 +867,22 @@ async function loadStatus() {
     targetCount.textContent = "-";
     retentionDays.textContent = "-";
     panels["24h"].textContent = "Impossible de charger status.json.";
+  } finally {
+    statusRefreshInFlight = false;
   }
 }
 
 loadStatus();
-setInterval(loadStatus, 60000);
+setInterval(() => {
+  if (!document.hidden) {
+    loadStatus();
+  }
+}, refreshIntervalMs);
+
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) {
+    loadStatus();
+  }
+});
+
+window.addEventListener("focus", loadStatus);
