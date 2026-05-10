@@ -2,7 +2,7 @@
   "schema_version": 2,
   "script_version": "2026.05.06.13",
   "site_title": "Trackers status",
-  "updated_at": "2026-05-10T14:48:58.408691+00:00",
+  "updated_at": "2026-05-10T14:56:00.332673+00:00",
   "display_timezone": "Europe/Paris",
   "history_started_at": "2026-05-05T10:00:00+00:00",
   "retention_days": 30,
@@ -23,7 +23,7 @@
       "status": "down",
       "history_started_at": "2026-05-05T10:00:00+00:00",
       "down_since": "2026-04-27T11:54:21.106419+00:00",
-      "current_downtime_seconds": 1133677,
+      "current_downtime_seconds": 1134099,
       "last_error": "La page principale a retourné HTTP 521 for https://forum.torr9.xyz/"
     },
     {
@@ -47,11 +47,11 @@
     {
       "key": "nexum",
       "label": "Nexum",
-      "status": "up",
+      "status": "down",
       "history_started_at": "2026-05-05T10:00:00+00:00",
-      "down_since": null,
-      "current_downtime_seconds": null,
-      "last_error": null
+      "down_since": "2026-05-10T14:55:02.597903+00:00",
+      "current_downtime_seconds": 57,
+      "last_error": "Un élément attendu n'est jamais apparu à l'écran avant le délai."
     },
     {
       "key": "lacale",
@@ -69,7 +69,7 @@
       "label": "Forum Torr9",
       "started_at": "2026-04-27T11:54:21.106419+00:00",
       "ended_at": null,
-      "duration_seconds": 1133677,
+      "duration_seconds": 1134099,
       "last_error": "La page principale a retourné HTTP 521 for https://forum.torr9.xyz/"
     },
     {
@@ -375,6 +375,14 @@
       "ended_at": "2026-05-10T01:31:45.115370+00:00",
       "duration_seconds": 510,
       "last_error": "La page principale a retourné HTTP 525 for https://c411.org"
+    },
+    {
+      "target_key": "nexum",
+      "label": "Nexum",
+      "started_at": "2026-05-10T14:55:02.597903+00:00",
+      "ended_at": null,
+      "duration_seconds": 57,
+      "last_error": "Un élément attendu n'est jamais apparu à l'écran avant le délai."
     }
   ],
   "external_status": [
@@ -383,50 +391,15 @@
       "provider": "uptime-kuma",
       "label": "Statut officiel Nexum",
       "status_url": "https://status.nexum-core.com/status/nexum",
-      "updated_at": "2026-05-10T14:48:58.408691+00:00",
+      "updated_at": "2026-05-10T14:56:00.332673+00:00",
       "services": [
         {
           "key": "nexum-nexum-website",
           "label": "Nexum - Website",
           "status": "up",
-          "ping_ms": 119,
+          "ping_ms": 295,
           "uptime_24h_percent": 100.0,
           "ping_history": [
-            {
-              "timestamp": "2026-05-10T13:09:30.462000+00:00",
-              "status": "up",
-              "ping_ms": 139
-            },
-            {
-              "timestamp": "2026-05-10T13:10:30.462000+00:00",
-              "status": "up",
-              "ping_ms": 151
-            },
-            {
-              "timestamp": "2026-05-10T13:11:30.463000+00:00",
-              "status": "up",
-              "ping_ms": 109
-            },
-            {
-              "timestamp": "2026-05-10T13:12:30.465000+00:00",
-              "status": "up",
-              "ping_ms": 101
-            },
-            {
-              "timestamp": "2026-05-10T13:13:30.465000+00:00",
-              "status": "up",
-              "ping_ms": 203
-            },
-            {
-              "timestamp": "2026-05-10T13:14:30.466000+00:00",
-              "status": "up",
-              "ping_ms": 171
-            },
-            {
-              "timestamp": "2026-05-10T13:15:30.467000+00:00",
-              "status": "up",
-              "ping_ms": 175
-            },
             {
               "timestamp": "2026-05-10T13:16:30.467000+00:00",
               "status": "up",
@@ -891,6 +864,41 @@
               "timestamp": "2026-05-10T14:48:30.769000+00:00",
               "status": "up",
               "ping_ms": 119
+            },
+            {
+              "timestamp": "2026-05-10T14:49:30.769000+00:00",
+              "status": "up",
+              "ping_ms": 112
+            },
+            {
+              "timestamp": "2026-05-10T14:50:30.770000+00:00",
+              "status": "up",
+              "ping_ms": 106
+            },
+            {
+              "timestamp": "2026-05-10T14:51:30.770000+00:00",
+              "status": "up",
+              "ping_ms": 108
+            },
+            {
+              "timestamp": "2026-05-10T14:52:30.770000+00:00",
+              "status": "up",
+              "ping_ms": 195
+            },
+            {
+              "timestamp": "2026-05-10T14:53:30.770000+00:00",
+              "status": "up",
+              "ping_ms": 134
+            },
+            {
+              "timestamp": "2026-05-10T14:54:30.770000+00:00",
+              "status": "up",
+              "ping_ms": 152
+            },
+            {
+              "timestamp": "2026-05-10T14:55:30.772000+00:00",
+              "status": "up",
+              "ping_ms": 295
             }
           ]
         },
@@ -898,44 +906,9 @@
           "key": "nexum-nexum-tracker",
           "label": "Nexum - Tracker",
           "status": "up",
-          "ping_ms": 60,
+          "ping_ms": 96,
           "uptime_24h_percent": 100.0,
           "ping_history": [
-            {
-              "timestamp": "2026-05-10T13:09:31.005000+00:00",
-              "status": "up",
-              "ping_ms": 38
-            },
-            {
-              "timestamp": "2026-05-10T13:10:31.005000+00:00",
-              "status": "up",
-              "ping_ms": 87
-            },
-            {
-              "timestamp": "2026-05-10T13:11:31.005000+00:00",
-              "status": "up",
-              "ping_ms": 53
-            },
-            {
-              "timestamp": "2026-05-10T13:12:31.005000+00:00",
-              "status": "up",
-              "ping_ms": 45
-            },
-            {
-              "timestamp": "2026-05-10T13:13:31.005000+00:00",
-              "status": "up",
-              "ping_ms": 55
-            },
-            {
-              "timestamp": "2026-05-10T13:14:31.006000+00:00",
-              "status": "up",
-              "ping_ms": 54
-            },
-            {
-              "timestamp": "2026-05-10T13:15:31.006000+00:00",
-              "status": "up",
-              "ping_ms": 86
-            },
             {
               "timestamp": "2026-05-10T13:16:31.007000+00:00",
               "status": "up",
@@ -1400,6 +1373,41 @@
               "timestamp": "2026-05-10T14:48:31.035000+00:00",
               "status": "up",
               "ping_ms": 60
+            },
+            {
+              "timestamp": "2026-05-10T14:49:31.035000+00:00",
+              "status": "up",
+              "ping_ms": 91
+            },
+            {
+              "timestamp": "2026-05-10T14:50:31.035000+00:00",
+              "status": "up",
+              "ping_ms": 62
+            },
+            {
+              "timestamp": "2026-05-10T14:51:31.035000+00:00",
+              "status": "up",
+              "ping_ms": 64
+            },
+            {
+              "timestamp": "2026-05-10T14:52:31.036000+00:00",
+              "status": "up",
+              "ping_ms": 131
+            },
+            {
+              "timestamp": "2026-05-10T14:53:31.036000+00:00",
+              "status": "up",
+              "ping_ms": 54
+            },
+            {
+              "timestamp": "2026-05-10T14:54:31.036000+00:00",
+              "status": "up",
+              "ping_ms": 63
+            },
+            {
+              "timestamp": "2026-05-10T14:55:31.036000+00:00",
+              "status": "up",
+              "ping_ms": 96
             }
           ]
         },
@@ -1410,41 +1418,6 @@
           "ping_ms": 27,
           "uptime_24h_percent": 100.0,
           "ping_history": [
-            {
-              "timestamp": "2026-05-10T13:09:32.288000+00:00",
-              "status": "up",
-              "ping_ms": 26
-            },
-            {
-              "timestamp": "2026-05-10T13:10:32.289000+00:00",
-              "status": "up",
-              "ping_ms": 28
-            },
-            {
-              "timestamp": "2026-05-10T13:11:32.289000+00:00",
-              "status": "up",
-              "ping_ms": 27
-            },
-            {
-              "timestamp": "2026-05-10T13:12:32.289000+00:00",
-              "status": "up",
-              "ping_ms": 27
-            },
-            {
-              "timestamp": "2026-05-10T13:13:32.290000+00:00",
-              "status": "up",
-              "ping_ms": 27
-            },
-            {
-              "timestamp": "2026-05-10T13:14:32.291000+00:00",
-              "status": "up",
-              "ping_ms": 27
-            },
-            {
-              "timestamp": "2026-05-10T13:15:32.291000+00:00",
-              "status": "up",
-              "ping_ms": 26
-            },
             {
               "timestamp": "2026-05-10T13:16:32.292000+00:00",
               "status": "up",
@@ -1909,6 +1882,41 @@
               "timestamp": "2026-05-10T14:48:32.463000+00:00",
               "status": "up",
               "ping_ms": 27
+            },
+            {
+              "timestamp": "2026-05-10T14:49:32.464000+00:00",
+              "status": "up",
+              "ping_ms": 27
+            },
+            {
+              "timestamp": "2026-05-10T14:50:32.464000+00:00",
+              "status": "up",
+              "ping_ms": 27
+            },
+            {
+              "timestamp": "2026-05-10T14:51:32.464000+00:00",
+              "status": "up",
+              "ping_ms": 27
+            },
+            {
+              "timestamp": "2026-05-10T14:52:32.464000+00:00",
+              "status": "up",
+              "ping_ms": 27
+            },
+            {
+              "timestamp": "2026-05-10T14:53:32.465000+00:00",
+              "status": "up",
+              "ping_ms": 27
+            },
+            {
+              "timestamp": "2026-05-10T14:54:32.466000+00:00",
+              "status": "up",
+              "ping_ms": 27
+            },
+            {
+              "timestamp": "2026-05-10T14:55:32.466000+00:00",
+              "status": "up",
+              "ping_ms": 27
             }
           ]
         }
@@ -1919,50 +1927,15 @@
       "provider": "uptime-kuma",
       "label": "Statut officiel La-Cale",
       "status_url": "https://status.la-cale.space/status/default",
-      "updated_at": "2026-05-10T14:48:58.408691+00:00",
+      "updated_at": "2026-05-10T14:56:00.332673+00:00",
       "services": [
         {
           "key": "lacale-la-cale-site",
           "label": "La-Cale Site",
           "status": "up",
-          "ping_ms": 254,
+          "ping_ms": 171,
           "uptime_24h_percent": 99.31,
           "ping_history": [
-            {
-              "timestamp": "2026-05-10T13:08:41.165000+00:00",
-              "status": "up",
-              "ping_ms": 184
-            },
-            {
-              "timestamp": "2026-05-10T13:09:41.166000+00:00",
-              "status": "up",
-              "ping_ms": 174
-            },
-            {
-              "timestamp": "2026-05-10T13:10:41.167000+00:00",
-              "status": "up",
-              "ping_ms": 323
-            },
-            {
-              "timestamp": "2026-05-10T13:11:41.168000+00:00",
-              "status": "up",
-              "ping_ms": 169
-            },
-            {
-              "timestamp": "2026-05-10T13:12:41.169000+00:00",
-              "status": "up",
-              "ping_ms": 365
-            },
-            {
-              "timestamp": "2026-05-10T13:13:41.170000+00:00",
-              "status": "up",
-              "ping_ms": 209
-            },
-            {
-              "timestamp": "2026-05-10T13:14:41.172000+00:00",
-              "status": "up",
-              "ping_ms": 488
-            },
             {
               "timestamp": "2026-05-10T13:15:41.174000+00:00",
               "status": "up",
@@ -2427,6 +2400,41 @@
               "timestamp": "2026-05-10T14:47:41.255000+00:00",
               "status": "up",
               "ping_ms": 254
+            },
+            {
+              "timestamp": "2026-05-10T14:48:41.256000+00:00",
+              "status": "up",
+              "ping_ms": 226
+            },
+            {
+              "timestamp": "2026-05-10T14:49:41.256000+00:00",
+              "status": "up",
+              "ping_ms": 156
+            },
+            {
+              "timestamp": "2026-05-10T14:50:41.257000+00:00",
+              "status": "up",
+              "ping_ms": 228
+            },
+            {
+              "timestamp": "2026-05-10T14:51:41.258000+00:00",
+              "status": "up",
+              "ping_ms": 246
+            },
+            {
+              "timestamp": "2026-05-10T14:52:41.260000+00:00",
+              "status": "up",
+              "ping_ms": 260
+            },
+            {
+              "timestamp": "2026-05-10T14:53:41.262000+00:00",
+              "status": "up",
+              "ping_ms": 169
+            },
+            {
+              "timestamp": "2026-05-10T14:54:41.263000+00:00",
+              "status": "up",
+              "ping_ms": 171
             }
           ]
         },
@@ -2434,44 +2442,9 @@
           "key": "lacale-la-cale-tracker",
           "label": "La-Cale Tracker",
           "status": "up",
-          "ping_ms": 282,
+          "ping_ms": 209,
           "uptime_24h_percent": 97.51,
           "ping_history": [
-            {
-              "timestamp": "2026-05-10T13:08:42.906000+00:00",
-              "status": "up",
-              "ping_ms": 212
-            },
-            {
-              "timestamp": "2026-05-10T13:09:42.907000+00:00",
-              "status": "up",
-              "ping_ms": 209
-            },
-            {
-              "timestamp": "2026-05-10T13:10:42.908000+00:00",
-              "status": "up",
-              "ping_ms": 224
-            },
-            {
-              "timestamp": "2026-05-10T13:11:42.908000+00:00",
-              "status": "up",
-              "ping_ms": 245
-            },
-            {
-              "timestamp": "2026-05-10T13:12:42.908000+00:00",
-              "status": "up",
-              "ping_ms": 322
-            },
-            {
-              "timestamp": "2026-05-10T13:13:42.909000+00:00",
-              "status": "up",
-              "ping_ms": 256
-            },
-            {
-              "timestamp": "2026-05-10T13:14:42.910000+00:00",
-              "status": "up",
-              "ping_ms": 334
-            },
             {
               "timestamp": "2026-05-10T13:15:42.911000+00:00",
               "status": "up",
@@ -2936,6 +2909,41 @@
               "timestamp": "2026-05-10T14:47:42.981000+00:00",
               "status": "up",
               "ping_ms": 282
+            },
+            {
+              "timestamp": "2026-05-10T14:48:42.983000+00:00",
+              "status": "up",
+              "ping_ms": 186
+            },
+            {
+              "timestamp": "2026-05-10T14:49:42.983000+00:00",
+              "status": "up",
+              "ping_ms": 176
+            },
+            {
+              "timestamp": "2026-05-10T14:50:42.983000+00:00",
+              "status": "up",
+              "ping_ms": 174
+            },
+            {
+              "timestamp": "2026-05-10T14:51:42.983000+00:00",
+              "status": "up",
+              "ping_ms": 253
+            },
+            {
+              "timestamp": "2026-05-10T14:52:42.985000+00:00",
+              "status": "up",
+              "ping_ms": 261
+            },
+            {
+              "timestamp": "2026-05-10T14:53:42.985000+00:00",
+              "status": "up",
+              "ping_ms": 185
+            },
+            {
+              "timestamp": "2026-05-10T14:54:42.985000+00:00",
+              "status": "up",
+              "ping_ms": 209
             }
           ]
         },
@@ -2943,39 +2951,9 @@
           "key": "lacale-la-cale-api",
           "label": "La-Cale API",
           "status": "up",
-          "ping_ms": 158,
+          "ping_ms": 190,
           "uptime_24h_percent": 99.17,
           "ping_history": [
-            {
-              "timestamp": "2026-05-10T13:09:31.467000+00:00",
-              "status": "up",
-              "ping_ms": 208
-            },
-            {
-              "timestamp": "2026-05-10T13:10:31.468000+00:00",
-              "status": "up",
-              "ping_ms": 145
-            },
-            {
-              "timestamp": "2026-05-10T13:11:31.470000+00:00",
-              "status": "up",
-              "ping_ms": 160
-            },
-            {
-              "timestamp": "2026-05-10T13:12:31.470000+00:00",
-              "status": "up",
-              "ping_ms": 360
-            },
-            {
-              "timestamp": "2026-05-10T13:13:31.471000+00:00",
-              "status": "up",
-              "ping_ms": 378
-            },
-            {
-              "timestamp": "2026-05-10T13:14:31.474000+00:00",
-              "status": "up",
-              "ping_ms": 411
-            },
             {
               "timestamp": "2026-05-10T13:15:31.476000+00:00",
               "status": "up",
@@ -3445,6 +3423,36 @@
               "timestamp": "2026-05-10T14:48:31.577000+00:00",
               "status": "up",
               "ping_ms": 158
+            },
+            {
+              "timestamp": "2026-05-10T14:49:31.578000+00:00",
+              "status": "up",
+              "ping_ms": 190
+            },
+            {
+              "timestamp": "2026-05-10T14:50:31.578000+00:00",
+              "status": "up",
+              "ping_ms": 141
+            },
+            {
+              "timestamp": "2026-05-10T14:51:31.579000+00:00",
+              "status": "up",
+              "ping_ms": 152
+            },
+            {
+              "timestamp": "2026-05-10T14:52:31.579000+00:00",
+              "status": "up",
+              "ping_ms": 370
+            },
+            {
+              "timestamp": "2026-05-10T14:53:31.580000+00:00",
+              "status": "up",
+              "ping_ms": 186
+            },
+            {
+              "timestamp": "2026-05-10T14:54:31.580000+00:00",
+              "status": "up",
+              "ping_ms": 190
             }
           ]
         },
@@ -3452,44 +3460,9 @@
           "key": "lacale-la-cale-external-api",
           "label": "La-Cale External API",
           "status": "up",
-          "ping_ms": 153,
+          "ping_ms": 143,
           "uptime_24h_percent": 99.17,
           "ping_history": [
-            {
-              "timestamp": "2026-05-10T13:08:50.774000+00:00",
-              "status": "up",
-              "ping_ms": 199
-            },
-            {
-              "timestamp": "2026-05-10T13:09:50.774000+00:00",
-              "status": "up",
-              "ping_ms": 287
-            },
-            {
-              "timestamp": "2026-05-10T13:10:50.774000+00:00",
-              "status": "up",
-              "ping_ms": 227
-            },
-            {
-              "timestamp": "2026-05-10T13:11:50.774000+00:00",
-              "status": "up",
-              "ping_ms": 394
-            },
-            {
-              "timestamp": "2026-05-10T13:12:50.774000+00:00",
-              "status": "up",
-              "ping_ms": 396
-            },
-            {
-              "timestamp": "2026-05-10T13:13:50.775000+00:00",
-              "status": "up",
-              "ping_ms": 193
-            },
-            {
-              "timestamp": "2026-05-10T13:14:50.775000+00:00",
-              "status": "up",
-              "ping_ms": 368
-            },
             {
               "timestamp": "2026-05-10T13:15:50.777000+00:00",
               "status": "up",
@@ -3954,6 +3927,41 @@
               "timestamp": "2026-05-10T14:47:50.848000+00:00",
               "status": "up",
               "ping_ms": 153
+            },
+            {
+              "timestamp": "2026-05-10T14:48:50.849000+00:00",
+              "status": "up",
+              "ping_ms": 162
+            },
+            {
+              "timestamp": "2026-05-10T14:49:50.851000+00:00",
+              "status": "up",
+              "ping_ms": 145
+            },
+            {
+              "timestamp": "2026-05-10T14:50:50.852000+00:00",
+              "status": "up",
+              "ping_ms": 393
+            },
+            {
+              "timestamp": "2026-05-10T14:51:50.852000+00:00",
+              "status": "up",
+              "ping_ms": 164
+            },
+            {
+              "timestamp": "2026-05-10T14:52:50.852000+00:00",
+              "status": "up",
+              "ping_ms": 140
+            },
+            {
+              "timestamp": "2026-05-10T14:53:50.854000+00:00",
+              "status": "up",
+              "ping_ms": 204
+            },
+            {
+              "timestamp": "2026-05-10T14:54:50.855000+00:00",
+              "status": "up",
+              "ping_ms": 143
             }
           ]
         }
