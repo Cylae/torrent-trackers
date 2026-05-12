@@ -758,13 +758,40 @@ h1 {
   color: var(--down);
 }
 
+.official-service.has-no-ping {
+  border-color: rgba(101, 112, 133, 0.58);
+}
+
+.official-service.has-no-ping.is-down {
+  border-color: rgba(239, 68, 68, 0.42);
+}
+
 .ping-chart {
   display: grid;
   gap: 6px;
   margin-top: 6px;
 }
 
-.official-service-list.are-graphs-collapsed .ping-chart {
+.ping-unavailable {
+  display: grid;
+  place-items: center;
+  min-height: 58px;
+  margin-top: 6px;
+  border: 1px dashed rgba(101, 112, 133, 0.46);
+  border-radius: 6px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 900;
+  text-align: center;
+}
+
+.official-service.has-no-ping.is-down .ping-unavailable {
+  border-color: rgba(239, 68, 68, 0.38);
+  color: var(--down);
+}
+
+.official-service-list.are-graphs-collapsed .ping-chart,
+.official-service-list.are-graphs-collapsed .ping-unavailable {
   display: none;
 }
 

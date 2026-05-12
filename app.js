@@ -537,6 +537,7 @@ function buildExternalStatusPanel(target) {
 
       for (const service of services) {
         const serviceStatus = externalServiceStatus(service);
+        const hasCurrentPing = Number.isFinite(service.ping_ms);
         const item = document.createElement("div");
         item.className = `official-service ${statusClass(serviceStatus)}`;
 
@@ -544,9 +545,9 @@ function buildExternalStatusPanel(target) {
         serviceLabel.textContent = service.label || service.key || "Service";
 
         const serviceMeta = document.createElement("strong");
-        serviceMeta.textContent = Number.isFinite(service.ping_ms)
+        serviceMeta.textContent = hasCurrentPing
           ? `${statusText(serviceStatus)} · ${service.ping_ms} ms`
-          : statusText(serviceStatus);
+          : `${statusText(serviceStatus)} · ping indisponible`;
 
         const uptimeText = formatUptimePercent(service.uptime_24h_percent);
         if (uptimeText) {
@@ -557,11 +558,22 @@ function buildExternalStatusPanel(target) {
         } else {
           item.append(serviceLabel, serviceMeta);
         }
-        item.classList.add(pingClass(service.ping_ms));
+        const servicePingClass = pingClass(service.ping_ms);
+        if (servicePingClass) {
+          item.classList.add(servicePingClass);
+        }
+        if (!hasCurrentPing) {
+          item.classList.add("has-no-ping");
+        }
         const chart = buildPingSparkline(service);
         if (chart) {
           item.append(chart);
           hasPingCharts = true;
+        } else if (!hasCurrentPing) {
+          const unavailable = document.createElement("div");
+          unavailable.className = "ping-unavailable";
+          unavailable.textContent = "Aucune mesure de ping disponible";
+          item.append(unavailable);
         }
         list.append(item);
       }
@@ -1204,24 +1216,64 @@ if (includeUnavailable) {
 
 async function loadStatus() {
   if (statusRefreshInFlight) {
+    console.debug("[status] refresh skipped: request already in flight");
     return;
   }
 
   statusRefreshInFlight = true;
+  const url = `status.json?ts=${Date.now()}`;
+  let step = "fetch";
   try {
-    const response = await fetch(`status.json?ts=${Date.now()}`, { cache: "no-store" });
+    console.debug("[status] fetching", url);
+    const response = await fetch(url, { cache: "no-store" });
+    console.debug("[status] response", {
+      ok: response.ok,
+      status: response.status,
+      statusText: response.statusText,
+      contentType: response.headers.get("content-type"),
+      url: response.url
+    });
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);
     }
-    render(await response.json());
+
+    step = "json";
+    const rawBody = await response.text();
+    console.debug("[status] body received", {
+      bytes: rawBody.length,
+      preview: rawBody.slice(0, 160)
+    });
+
+    let data;
+    try {
+      data = JSON.parse(rawBody);
+    } catch (error) {
+      console.error("[status] invalid JSON", {
+        error,
+        preview: rawBody.slice(0, 500)
+      });
+      throw error;
+    }
+
+    step = "render";
+    console.debug("[status] parsed", {
+      schemaVersion: data.schema_version,
+      updatedAt: data.updated_at,
+      targets: Array.isArray(data.targets) ? data.targets.length : "invalid",
+      incidents: Array.isArray(data.incidents) ? data.incidents.length : "invalid",
+      externalStatus: Array.isArray(data.external_status) ? data.external_status.length : "invalid"
+    });
+    render(data);
+    console.debug("[status] render complete");
   } catch (error) {
+    console.error(`[status] failed during ${step}`, error);
     summary.classList.remove("is-up");
     summary.classList.add("is-down");
     summaryText.textContent = "Statut indisponible";
     updatedAt.textContent = "-";
     targetCount.textContent = "-";
     retentionDays.textContent = "-";
-    panels["24h"].textContent = "Impossible de charger status.json.";
+    panels["24h"].textContent = `Impossible de charger status.json. Étape: ${step}. ${error.message || error}`;
   } finally {
     statusRefreshInFlight = false;
   }
