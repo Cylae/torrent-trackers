@@ -16,6 +16,8 @@ let includeUnavailableData = true;
 let statusRefreshInFlight = false;
 
 const refreshIntervalMs = 30000;
+const dataUnavailableError = "La connectivité réseau locale du conteneur est indisponible.";
+const dataUnavailableMessage = "Pour des raisons techniques, le service de monitoring était indisponible.";
 
 const targetParents = {
   forum: "torr9"
@@ -88,6 +90,9 @@ function floorToHalfHour(value) {
 }
 
 function statusClass(status) {
+  if (status === "unknown") {
+    return "is-unknown";
+  }
   if (status === "down") {
     return "is-down";
   }
@@ -98,6 +103,9 @@ function statusClass(status) {
 }
 
 function statusText(status) {
+  if (status === "unknown") {
+    return "Données indisponibles";
+  }
   if (status === "down") {
     return "Hors ligne";
   }
@@ -108,7 +116,14 @@ function statusText(status) {
 }
 
 function targetStatus(target) {
+  if (target.status === "down" && isDataUnavailableError(target.last_error)) {
+    return "unknown";
+  }
   return target.status === "down" ? "down" : "up";
+}
+
+function isDataUnavailableError(error) {
+  return typeof error === "string" && error.includes(dataUnavailableError);
 }
 
 function externalServiceStatus(service) {
@@ -366,18 +381,23 @@ function directChildrenStatus(target, includeExternal = true) {
     ...children.map((child) => aggregateStatus(child, includeExternal)),
     ...externalStatuses
   ];
-  if (target.status === "down" && childStatuses.every((status) => status === "down")) {
+  const currentStatus = targetStatus(target);
+  if (currentStatus === "unknown" && childStatuses.every((status) => status === "unknown")) {
+    return "unknown";
+  }
+  if (currentStatus === "down" && childStatuses.every((status) => status === "down")) {
     return "down";
   }
   if (childStatuses.some((status) => status !== "up")) {
     return "degraded";
   }
-  return targetStatus(target);
+  return currentStatus;
 }
 
 function aggregateStatus(target, includeExternal = true) {
-  if (target.status === "down") {
-    return "down";
+  const currentStatus = targetStatus(target);
+  if (currentStatus !== "up") {
+    return currentStatus;
   }
   const children = Array.isArray(target.children) ? target.children : [];
   const hasChildIssue = children.some((child) => aggregateStatus(child, includeExternal) !== "up");
@@ -420,7 +440,7 @@ function flattenTargets(targets) {
 function incidentIntervals(data, targetKey, windowStart, windowEnd) {
   const incidents = Array.isArray(data.incidents) ? data.incidents : [];
   return incidents
-    .filter((incident) => incident.target_key === targetKey)
+    .filter((incident) => incident.target_key === targetKey && !isDataUnavailableError(incident.last_error))
     .map((incident) => {
       const startedAt = parseDate(incident.started_at);
       const endedAt = parseDate(incident.ended_at) || windowEnd;
@@ -437,11 +457,64 @@ function incidentIntervals(data, targetKey, windowStart, windowEnd) {
     .sort((a, b) => a.start - b.start);
 }
 
+function dataUnavailableIntervals(data, windowStart, windowEnd) {
+  const incidents = Array.isArray(data.incidents) ? data.incidents : [];
+  const intervals = incidents
+    .filter((incident) => isDataUnavailableError(incident.last_error))
+    .map((incident) => {
+      const startedAt = parseDate(incident.started_at);
+      const endedAt = parseDate(incident.ended_at) || windowEnd;
+      if (!startedAt || endedAt <= windowStart || startedAt >= windowEnd) {
+        return null;
+      }
+      return {
+        ...incident,
+        label: "Données indisponibles",
+        start: new Date(Math.max(startedAt.getTime(), windowStart.getTime())),
+        end: new Date(Math.min(endedAt.getTime(), windowEnd.getTime()))
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) => a.start - b.start);
+
+  return mergeIntervals(intervals);
+}
+
+function mergeIntervals(intervals) {
+  const merged = [];
+  for (const interval of intervals) {
+    const previous = merged[merged.length - 1];
+    if (previous && interval.start <= previous.end) {
+      previous.end = new Date(Math.max(previous.end.getTime(), interval.end.getTime()));
+      previous.duration_seconds = Math.max(
+        0,
+        (previous.end.getTime() - previous.start.getTime()) / 1000
+      );
+    } else {
+      merged.push({ ...interval });
+    }
+  }
+  return merged;
+}
+
 function overlapSeconds(intervals, start, end) {
   return intervals.reduce((total, interval) => {
     const overlapStart = Math.max(start.getTime(), interval.start.getTime());
     const overlapEnd = Math.min(end.getTime(), interval.end.getTime());
     return total + Math.max(0, overlapEnd - overlapStart) / 1000;
+  }, 0);
+}
+
+function overlapExcludingSeconds(intervals, excludedIntervals, start, end) {
+  return intervals.reduce((total, interval) => {
+    const overlapStart = new Date(Math.max(start.getTime(), interval.start.getTime()));
+    const overlapEnd = new Date(Math.min(end.getTime(), interval.end.getTime()));
+    if (overlapEnd <= overlapStart) {
+      return total;
+    }
+    const seconds = (overlapEnd.getTime() - overlapStart.getTime()) / 1000;
+    const excludedSeconds = overlapSeconds(excludedIntervals, overlapStart, overlapEnd);
+    return total + Math.max(0, seconds - excludedSeconds);
   }, 0);
 }
 
@@ -495,7 +568,10 @@ function buildSubtargetHead(target) {
 function buildStatusDetail(target) {
   const detail = document.createElement("p");
   detail.className = "detail";
-  if (target.status === "down") {
+  const status = targetStatus(target);
+  if (status === "unknown") {
+    detail.textContent = dataUnavailableMessage;
+  } else if (status === "down") {
     const duration = formatDuration(target.current_downtime_seconds);
     detail.textContent = duration
       ? `Incident en cours depuis ${formatDate(target.down_since)} (${duration})`
@@ -640,13 +716,17 @@ function buildTimelineLegend() {
     <span class="legend-item"><span class="legend-dot"></span>Up</span>
     <span class="legend-item"><span class="legend-dot is-partial"></span>Partiel</span>
     <span class="legend-item"><span class="legend-dot is-down"></span>Down</span>
+    <span class="legend-item"><span class="legend-dot is-unknown"></span>Données indisponibles</span>
     <span class="legend-note">1 case = 30 minutes</span>
   `;
   return legend;
 }
 
 function buildTimeline(target, data, windowStart, windowEnd, slotSeconds) {
-  const intervals = incidentIntervals(data, target.key, windowStart, windowEnd);
+  const intervals = incidentIntervals(data, target.key, windowStart, windowEnd)
+    .map((interval, index) => ({ ...interval, periodId: `down-${index}` }));
+  const unavailableIntervals = dataUnavailableIntervals(data, windowStart, windowEnd)
+    .map((interval, index) => ({ ...interval, periodId: `unknown-${index}` }));
   const timeline = document.createElement("div");
   timeline.className = "timeline";
   timeline.setAttribute("aria-label", `Disponibilité 24h ${target.label}`);
@@ -655,32 +735,83 @@ function buildTimeline(target, data, windowStart, windowEnd, slotSeconds) {
     const start = new Date(windowStart.getTime() + index * slotSeconds * 1000);
     const end = new Date(start.getTime() + slotSeconds * 1000);
     const downSeconds = overlapSeconds(intervals, start, end);
+    const unavailableSeconds = overlapSeconds(unavailableIntervals, start, end);
+    const slotUnavailableIntervals = overlappingIntervals(unavailableIntervals, start, end);
+    const slotIncidentIntervals = overlappingIntervals(intervals, start, end);
+    const highlightedIntervals = slotUnavailableIntervals.length
+      ? slotUnavailableIntervals
+      : slotIncidentIntervals;
+    const periodIds = highlightedIntervals.map((interval) => interval.periodId);
     const slot = document.createElement("span");
     slot.className = "slot";
     if (isTimelineMarker(start)) {
       slot.classList.add("has-marker");
     }
-    if (downSeconds >= slotSeconds - 1) {
+    if (unavailableSeconds >= slotSeconds - 1) {
+      slot.classList.add("is-unknown");
+    } else if (downSeconds >= slotSeconds - 1) {
       slot.classList.add("is-down");
-    } else if (downSeconds > 0) {
+    } else if (downSeconds > 0 || unavailableSeconds > 0) {
       slot.classList.add("is-partial");
     }
 
-    if (downSeconds > 0) {
-      const tooltip = createTooltip(overlappingIntervals(intervals, start, end));
+    const slotLabel = `${formatDate(start)} -> ${formatDate(end)}`;
+    if (downSeconds > 0 || unavailableSeconds > 0) {
+      const tooltip = unavailableSeconds > 0
+        ? createUnavailableTooltip(
+          start,
+          end,
+          unavailableSeconds,
+          slotUnavailableIntervals
+        )
+        : createTooltip(slotIncidentIntervals);
       slot.setAttribute("tabindex", "0");
-      slot.addEventListener("mouseenter", () => { tooltip.hidden = false; });
-      slot.addEventListener("mouseleave", () => { tooltip.hidden = true; });
-      slot.addEventListener("focus", () => { tooltip.hidden = false; });
-      slot.addEventListener("blur", () => { tooltip.hidden = true; });
+      slot.dataset.periodIds = periodIds.join(" ");
+      slot.addEventListener("mouseenter", () => {
+        tooltip.hidden = false;
+        highlightTimelinePeriods(timeline, periodIds);
+      });
+      slot.addEventListener("mouseleave", () => {
+        tooltip.hidden = true;
+        clearTimelineHighlights(timeline);
+      });
+      slot.addEventListener("focus", () => {
+        tooltip.hidden = false;
+        highlightTimelinePeriods(timeline, periodIds);
+      });
+      slot.addEventListener("blur", () => {
+        tooltip.hidden = true;
+        clearTimelineHighlights(timeline);
+      });
       slot.append(tooltip);
     }
 
-    slot.title = `${formatDate(start)} - ${formatDate(end)}`;
+    slot.setAttribute("aria-label", slotLabel);
     timeline.append(slot);
   }
 
   return timeline;
+}
+
+function highlightTimelinePeriods(timeline, periodIds) {
+  const activeIds = new Set(periodIds);
+  if (!activeIds.size) {
+    return;
+  }
+
+  timeline.classList.add("is-highlighting");
+  for (const slot of timeline.querySelectorAll(".slot")) {
+    const slotIds = (slot.dataset.periodIds || "").split(" ").filter(Boolean);
+    const isHighlighted = slotIds.some((periodId) => activeIds.has(periodId));
+    slot.classList.toggle("is-period-highlight", isHighlighted);
+  }
+}
+
+function clearTimelineHighlights(timeline) {
+  timeline.classList.remove("is-highlighting");
+  for (const slot of timeline.querySelectorAll(".slot.is-period-highlight")) {
+    slot.classList.remove("is-period-highlight");
+  }
 }
 
 function buildTimelineEntry(target, data, windowStart, windowEnd, slotSeconds, isChild = false) {
@@ -796,7 +927,7 @@ function bindHoverTooltip(trigger, tooltip) {
   tooltip.addEventListener("mouseleave", hide);
 }
 
-function createUnavailableTooltip(start, end, seconds) {
+function createUnavailableTooltip(start, end, seconds, intervals = []) {
   const tooltip = document.createElement("div");
   tooltip.className = "down-tooltip";
   tooltip.hidden = true;
@@ -804,10 +935,27 @@ function createUnavailableTooltip(start, end, seconds) {
   const title = document.createElement("strong");
   title.textContent = "Données indisponibles";
 
-  const detail = document.createElement("p");
-  detail.textContent = `${formatDate(start)} -> ${formatDate(end)} (${formatDuration(seconds) || "0m"})`;
+  tooltip.append(title);
 
-  tooltip.append(title, detail);
+  const message = document.createElement("p");
+  message.textContent = dataUnavailableMessage;
+  tooltip.append(message);
+
+  if (intervals.length) {
+    const list = document.createElement("ul");
+    for (const interval of intervals) {
+      const item = document.createElement("li");
+      const duration = Math.max(0, (interval.end.getTime() - interval.start.getTime()) / 1000);
+      item.textContent = `${formatDate(interval.start)} -> ${formatDate(interval.end)} (${formatDuration(duration) || "0m"})`;
+      list.append(item);
+    }
+    tooltip.append(list);
+  } else {
+    const detail = document.createElement("p");
+    detail.textContent = `${formatDate(start)} -> ${formatDate(end)} (${formatDuration(seconds) || "0m"})`;
+    tooltip.append(detail);
+  }
+
   return tooltip;
 }
 
@@ -896,12 +1044,29 @@ function uptimeMetrics(target, data, now, windowStart, windowSeconds) {
     rawUnknownSeconds,
     overlapSeconds(prehistoryIntervals, windowStart, unknownEnd)
   );
-  const unavailableSeconds = Math.max(0, rawUnknownSeconds - knownPrehistoryDownSeconds);
+  const prehistoryUnavailableSeconds = Math.max(0, rawUnknownSeconds - knownPrehistoryDownSeconds);
+  const prehistoryUnavailableIntervals = prehistoryUnavailableSeconds > 0
+    ? [{
+      label: "Données indisponibles",
+      start: windowStart,
+      end: unknownEnd,
+      duration_seconds: prehistoryUnavailableSeconds
+    }]
+    : [];
+  const unavailableIntervals = mergeIntervals([
+    ...prehistoryUnavailableIntervals,
+    ...dataUnavailableIntervals(data, windowStart, now)
+  ]);
+  const unavailableSeconds = Math.min(
+    windowSeconds,
+    overlapSeconds(unavailableIntervals, windowStart, now)
+  );
   const unknownSeconds = includeUnavailableData ? unavailableSeconds : 0;
   const knownSeconds = Math.max(0, windowSeconds - unavailableSeconds);
   const measuredStart = includeUnavailableData ? knownStart : windowStart;
   const intervals = incidentIntervals(data, target.key, measuredStart, now);
-  const measuredDownSeconds = overlapSeconds(intervals, measuredStart, now);
+  const excludedIntervals = includeUnavailableData ? unavailableIntervals : [];
+  const measuredDownSeconds = overlapExcludingSeconds(intervals, excludedIntervals, measuredStart, now);
   const downSeconds = Math.min(
     knownSeconds,
     (includeUnavailableData ? knownPrehistoryDownSeconds : 0) + measuredDownSeconds
@@ -911,15 +1076,18 @@ function uptimeMetrics(target, data, now, windowStart, windowSeconds) {
   const unknownPct = includeUnavailableData && windowSeconds > 0 ? (unknownSeconds / windowSeconds) * 100 : 0;
   const upSeconds = Math.max(0, knownSeconds - downSeconds);
   const upPct = denominatorSeconds > 0 ? (upSeconds / denominatorSeconds) * 100 : 0;
+  const firstUnavailable = unavailableIntervals[0];
+  const lastUnavailable = unavailableIntervals[unavailableIntervals.length - 1];
   return {
     downSeconds,
     downPct,
     includeUnavailable: includeUnavailableData,
     intervals,
     knownSeconds,
-    unknownEnd,
+    unknownEnd: lastUnavailable ? lastUnavailable.end : unknownEnd,
+    unknownIntervals: unavailableIntervals,
     unknownSeconds,
-    unknownStart: windowStart,
+    unknownStart: firstUnavailable ? firstUnavailable.start : windowStart,
     unknownPct,
     upSeconds,
     upPct
@@ -934,7 +1102,7 @@ function buildUptimeSubtargetEntry(target, data, days, now, windowStart, windowS
     windowStart,
     windowSeconds
   );
-  const { downPct, intervals, unknownEnd, unknownPct, unknownSeconds, unknownStart, upPct } = metrics;
+  const { downPct, intervals, unknownEnd, unknownIntervals, unknownPct, unknownSeconds, unknownStart, upPct } = metrics;
   const entry = document.createElement("div");
   entry.className = "uptime-entry is-child is-compact";
 
@@ -973,7 +1141,7 @@ function buildUptimeSubtargetEntry(target, data, days, now, windowStart, windowS
   unknown.setAttribute("stroke-dasharray", `${unknownPct} ${100 - unknownPct}`);
   unknown.setAttribute("stroke-dashoffset", "0");
 
-  const unavailableTooltip = createUnavailableTooltip(unknownStart, unknownEnd, unknownSeconds);
+  const unavailableTooltip = createUnavailableTooltip(unknownStart, unknownEnd, unknownSeconds, unknownIntervals);
   if (unknownPct > 0) {
     bindHoverTooltip(unknown, unavailableTooltip);
   }
@@ -1031,7 +1199,7 @@ function buildUptimeEntry(target, data, days, now, windowStart, windowSeconds) {
     windowStart,
     windowSeconds
   );
-  const { downPct, intervals, unknownEnd, unknownPct, unknownSeconds, unknownStart, upPct } = metrics;
+  const { downPct, intervals, unknownEnd, unknownIntervals, unknownPct, unknownSeconds, unknownStart, upPct } = metrics;
   const entry = document.createElement("div");
   entry.className = "uptime-entry";
 
@@ -1070,7 +1238,7 @@ function buildUptimeEntry(target, data, days, now, windowStart, windowSeconds) {
   unknown.setAttribute("stroke-dasharray", `${unknownPct} ${100 - unknownPct}`);
   unknown.setAttribute("stroke-dashoffset", "0");
 
-  const unavailableTooltip = createUnavailableTooltip(unknownStart, unknownEnd, unknownSeconds);
+  const unavailableTooltip = createUnavailableTooltip(unknownStart, unknownEnd, unknownSeconds, unknownIntervals);
   if (unknownPct > 0) {
     bindHoverTooltip(unknown, unavailableTooltip);
   }
@@ -1178,11 +1346,18 @@ function render(data) {
   latestData = data;
   const targetTree = getTargetTree(data);
   const targets = flattenTargets(targetTree);
-  const hasDown = targets.some((target) => target.status === "down");
+  const statuses = targets.map((target) => targetStatus(target));
+  const hasDown = statuses.some((status) => status === "down");
+  const hasUnknown = statuses.some((status) => status === "unknown");
 
-  summary.classList.toggle("is-up", !hasDown);
+  summary.classList.toggle("is-up", !hasDown && !hasUnknown);
   summary.classList.toggle("is-down", hasDown);
-  summaryText.textContent = hasDown ? "Incident en cours" : "Opérationnel";
+  summary.classList.toggle("is-unknown", !hasDown && hasUnknown);
+  summaryText.textContent = hasDown
+    ? "Incident en cours"
+    : hasUnknown
+      ? "Données indisponibles"
+      : "Opérationnel";
   updatedAt.textContent = formatDate(data.updated_at);
   targetCount.textContent = String(targetTree.length);
   retentionDays.textContent = `${data.retention_days || 30} jours`;
@@ -1268,6 +1443,7 @@ async function loadStatus() {
   } catch (error) {
     console.error(`[status] failed during ${step}`, error);
     summary.classList.remove("is-up");
+    summary.classList.remove("is-unknown");
     summary.classList.add("is-down");
     summaryText.textContent = "Statut indisponible";
     updatedAt.textContent = "-";

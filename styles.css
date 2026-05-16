@@ -102,6 +102,11 @@ h1 {
   animation: statusPulseDown 1.2s ease-in-out infinite;
 }
 
+.summary.is-unknown .summary-dot,
+.badge.is-unknown .status-dot {
+  background: var(--unknown);
+}
+
 .badge.is-degraded .status-dot {
   background: var(--warn);
   animation: statusPulseWarn 2.8s ease-in-out infinite;
@@ -123,6 +128,14 @@ h1 {
   background: var(--down-bg);
   color: var(--down);
   animation: badgeGlowDown 1.2s ease-in-out infinite;
+}
+
+.summary.is-unknown,
+.badge.is-unknown,
+.subtarget-badge.is-unknown {
+  border-color: var(--unknown);
+  background: rgba(148, 163, 184, 0.16);
+  color: var(--muted);
 }
 
 .badge.is-degraded,
@@ -315,6 +328,11 @@ h1 {
   background: linear-gradient(180deg, var(--down-bg), var(--surface) 58%);
 }
 
+.timeline-card.is-unknown,
+.uptime-card.is-unknown {
+  background: linear-gradient(180deg, rgba(148, 163, 184, 0.16), var(--surface) 58%);
+}
+
 .timeline-card.is-degraded,
 .uptime-card.is-degraded {
   background: linear-gradient(180deg, var(--warn-bg), var(--surface) 58%);
@@ -330,6 +348,12 @@ h1 {
 .uptime-card.is-degraded {
   border-color: #f59e0b;
   box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.6), 0 0 18px rgba(245, 158, 11, 0.38), var(--shadow);
+}
+
+.timeline-card.is-unknown,
+.uptime-card.is-unknown {
+  border-color: var(--unknown);
+  box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.45), var(--shadow);
 }
 
 .timeline-card.is-down,
@@ -405,6 +429,7 @@ h1 {
   height: 24px;
   border-radius: 4px;
   background: var(--ok);
+  transition: opacity 160ms ease, transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
 }
 
 .slot.has-marker::before {
@@ -423,6 +448,31 @@ h1 {
 
 .slot.is-down {
   background: var(--down);
+}
+
+.slot.is-unknown {
+  background: var(--unknown);
+}
+
+.timeline.is-highlighting .slot {
+  opacity: 0.38;
+  filter: saturate(0.7);
+}
+
+.timeline.is-highlighting .slot.is-period-highlight {
+  z-index: 2;
+  opacity: 1;
+  filter: saturate(1.2);
+  transform: scaleY(1.28);
+  box-shadow: 0 0 0 1px rgba(248, 250, 252, 0.86), 0 0 18px rgba(148, 163, 184, 0.58);
+}
+
+.timeline.is-highlighting .slot.is-period-highlight.is-down {
+  box-shadow: 0 0 0 1px rgba(248, 250, 252, 0.88), 0 0 18px rgba(239, 68, 68, 0.6);
+}
+
+.timeline.is-highlighting .slot.is-period-highlight.is-unknown {
+  box-shadow: 0 0 0 1px rgba(248, 250, 252, 0.88), 0 0 18px rgba(148, 163, 184, 0.72);
 }
 
 .timeline-legend {
@@ -454,6 +504,10 @@ h1 {
 
 .legend-dot.is-down {
   background: var(--down);
+}
+
+.legend-dot.is-unknown {
+  background: var(--unknown);
 }
 
 .legend-note {
