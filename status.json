@@ -2,7 +2,7 @@
   "schema_version": 2,
   "script_version": "2026.05.06.13",
   "site_title": "Trackers status",
-  "updated_at": "2026-05-20T14:41:57.048568+00:00",
+  "updated_at": "2026-05-20T14:48:20.396050+00:00",
   "display_timezone": "Europe/Paris",
   "history_started_at": "2026-05-05T10:00:00+00:00",
   "retention_days": 30,
@@ -23,7 +23,7 @@
       "status": "down",
       "history_started_at": "2026-05-05T10:00:00+00:00",
       "down_since": "2026-04-27T11:54:21.106419+00:00",
-      "current_downtime_seconds": 1997255,
+      "current_downtime_seconds": 1997639,
       "last_error": "La page principale a retourné HTTP 521 for https://forum.torr9.xyz/"
     },
     {
@@ -47,11 +47,11 @@
     {
       "key": "nexum",
       "label": "Nexum",
-      "status": "up",
+      "status": "down",
       "history_started_at": "2026-05-05T10:00:00+00:00",
-      "down_since": null,
-      "current_downtime_seconds": null,
-      "last_error": null
+      "down_since": "2026-05-20T14:47:53.144453+00:00",
+      "current_downtime_seconds": 27,
+      "last_error": "La vérification a échoué pendant le chargement ou le contrôle du site."
     },
     {
       "key": "lacale",
@@ -69,7 +69,7 @@
       "label": "Forum Torr9",
       "started_at": "2026-04-27T11:54:21.106419+00:00",
       "ended_at": null,
-      "duration_seconds": 1997255,
+      "duration_seconds": 1997639,
       "last_error": "La page principale a retourné HTTP 521 for https://forum.torr9.xyz/"
     },
     {
@@ -735,6 +735,14 @@
       "ended_at": "2026-05-20T14:08:23.581443+00:00",
       "duration_seconds": 513,
       "last_error": "Le chargement du site a dépassé le délai autorisé."
+    },
+    {
+      "target_key": "nexum",
+      "label": "Nexum",
+      "started_at": "2026-05-20T14:47:53.144453+00:00",
+      "ended_at": null,
+      "duration_seconds": 27,
+      "last_error": "La vérification a échoué pendant le chargement ou le contrôle du site."
     }
   ],
   "external_status": [
@@ -743,45 +751,15 @@
       "provider": "uptime-kuma",
       "label": "Statut officiel Gemini",
       "status_url": "https://status.gemini-tracker.org/status/gemini",
-      "updated_at": "2026-05-20T14:41:57.048568+00:00",
+      "updated_at": "2026-05-20T14:48:20.396050+00:00",
       "services": [
         {
           "key": "gemini-gemini-tracker-site",
           "label": "Gemini-Tracker Site",
           "status": "up",
-          "ping_ms": 402,
+          "ping_ms": 428,
           "uptime_24h_percent": 100.0,
           "ping_history": [
-            {
-              "timestamp": "2026-05-20T13:02:26.473000+00:00",
-              "status": "up",
-              "ping_ms": 402
-            },
-            {
-              "timestamp": "2026-05-20T13:03:26.473000+00:00",
-              "status": "up",
-              "ping_ms": 388
-            },
-            {
-              "timestamp": "2026-05-20T13:04:26.473000+00:00",
-              "status": "up",
-              "ping_ms": 439
-            },
-            {
-              "timestamp": "2026-05-20T13:05:26.474000+00:00",
-              "status": "up",
-              "ping_ms": 408
-            },
-            {
-              "timestamp": "2026-05-20T13:06:26.474000+00:00",
-              "status": "up",
-              "ping_ms": 394
-            },
-            {
-              "timestamp": "2026-05-20T13:07:26.475000+00:00",
-              "status": "up",
-              "ping_ms": 441
-            },
             {
               "timestamp": "2026-05-20T13:08:26.477000+00:00",
               "status": "up",
@@ -1251,6 +1229,36 @@
               "timestamp": "2026-05-20T14:41:26.523000+00:00",
               "status": "up",
               "ping_ms": 402
+            },
+            {
+              "timestamp": "2026-05-20T14:42:26.525000+00:00",
+              "status": "up",
+              "ping_ms": 418
+            },
+            {
+              "timestamp": "2026-05-20T14:43:26.525000+00:00",
+              "status": "up",
+              "ping_ms": 410
+            },
+            {
+              "timestamp": "2026-05-20T14:44:26.525000+00:00",
+              "status": "up",
+              "ping_ms": 672
+            },
+            {
+              "timestamp": "2026-05-20T14:45:26.524000+00:00",
+              "status": "up",
+              "ping_ms": 427
+            },
+            {
+              "timestamp": "2026-05-20T14:46:26.524000+00:00",
+              "status": "up",
+              "ping_ms": 411
+            },
+            {
+              "timestamp": "2026-05-20T14:47:26.524000+00:00",
+              "status": "up",
+              "ping_ms": 428
             }
           ]
         },
@@ -1258,39 +1266,9 @@
           "key": "gemini-gemini-tracker-tracker",
           "label": "Gemini-Tracker Tracker",
           "status": "up",
-          "ping_ms": 189,
+          "ping_ms": 197,
           "uptime_24h_percent": 99.93,
           "ping_history": [
-            {
-              "timestamp": "2026-05-20T13:02:26.742000+00:00",
-              "status": "up",
-              "ping_ms": 213
-            },
-            {
-              "timestamp": "2026-05-20T13:03:26.742000+00:00",
-              "status": "up",
-              "ping_ms": 168
-            },
-            {
-              "timestamp": "2026-05-20T13:04:26.743000+00:00",
-              "status": "up",
-              "ping_ms": 175
-            },
-            {
-              "timestamp": "2026-05-20T13:05:26.744000+00:00",
-              "status": "up",
-              "ping_ms": 301
-            },
-            {
-              "timestamp": "2026-05-20T13:06:26.745000+00:00",
-              "status": "up",
-              "ping_ms": 180
-            },
-            {
-              "timestamp": "2026-05-20T13:07:26.746000+00:00",
-              "status": "up",
-              "ping_ms": 196
-            },
             {
               "timestamp": "2026-05-20T13:08:26.746000+00:00",
               "status": "up",
@@ -1760,6 +1738,36 @@
               "timestamp": "2026-05-20T14:41:26.798000+00:00",
               "status": "up",
               "ping_ms": 189
+            },
+            {
+              "timestamp": "2026-05-20T14:42:26.799000+00:00",
+              "status": "up",
+              "ping_ms": 162
+            },
+            {
+              "timestamp": "2026-05-20T14:43:26.799000+00:00",
+              "status": "up",
+              "ping_ms": 179
+            },
+            {
+              "timestamp": "2026-05-20T14:44:26.799000+00:00",
+              "status": "up",
+              "ping_ms": 296
+            },
+            {
+              "timestamp": "2026-05-20T14:45:26.799000+00:00",
+              "status": "up",
+              "ping_ms": 174
+            },
+            {
+              "timestamp": "2026-05-20T14:46:26.800000+00:00",
+              "status": "up",
+              "ping_ms": 182
+            },
+            {
+              "timestamp": "2026-05-20T14:47:26.800000+00:00",
+              "status": "up",
+              "ping_ms": 197
             }
           ]
         },
@@ -1767,39 +1775,9 @@
           "key": "gemini-gemini-tracker-api",
           "label": "Gemini-Tracker API",
           "status": "up",
-          "ping_ms": 457,
+          "ping_ms": 468,
           "uptime_24h_percent": 99.72,
           "ping_history": [
-            {
-              "timestamp": "2026-05-20T13:02:27.129000+00:00",
-              "status": "up",
-              "ping_ms": 481
-            },
-            {
-              "timestamp": "2026-05-20T13:03:27.129000+00:00",
-              "status": "up",
-              "ping_ms": 484
-            },
-            {
-              "timestamp": "2026-05-20T13:04:27.129000+00:00",
-              "status": "up",
-              "ping_ms": 427
-            },
-            {
-              "timestamp": "2026-05-20T13:05:27.129000+00:00",
-              "status": "up",
-              "ping_ms": 452
-            },
-            {
-              "timestamp": "2026-05-20T13:06:27.130000+00:00",
-              "status": "up",
-              "ping_ms": 496
-            },
-            {
-              "timestamp": "2026-05-20T13:07:27.131000+00:00",
-              "status": "up",
-              "ping_ms": 552
-            },
             {
               "timestamp": "2026-05-20T13:08:27.132000+00:00",
               "status": "up",
@@ -2269,6 +2247,36 @@
               "timestamp": "2026-05-20T14:41:27.162000+00:00",
               "status": "up",
               "ping_ms": 457
+            },
+            {
+              "timestamp": "2026-05-20T14:42:27.162000+00:00",
+              "status": "up",
+              "ping_ms": 456
+            },
+            {
+              "timestamp": "2026-05-20T14:43:27.163000+00:00",
+              "status": "up",
+              "ping_ms": 480
+            },
+            {
+              "timestamp": "2026-05-20T14:44:27.164000+00:00",
+              "status": "up",
+              "ping_ms": 3523
+            },
+            {
+              "timestamp": "2026-05-20T14:45:27.164000+00:00",
+              "status": "up",
+              "ping_ms": 675
+            },
+            {
+              "timestamp": "2026-05-20T14:46:27.164000+00:00",
+              "status": "up",
+              "ping_ms": 595
+            },
+            {
+              "timestamp": "2026-05-20T14:47:27.164000+00:00",
+              "status": "up",
+              "ping_ms": 468
             }
           ]
         }
@@ -2279,45 +2287,15 @@
       "provider": "uptime-kuma",
       "label": "Statut officiel Nexum",
       "status_url": "https://status.nexum-core.com/status/nexum",
-      "updated_at": "2026-05-20T14:41:57.048568+00:00",
+      "updated_at": "2026-05-20T14:48:20.396050+00:00",
       "services": [
         {
           "key": "nexum-nexum-website",
           "label": "Nexum - Website",
           "status": "up",
-          "ping_ms": 187,
+          "ping_ms": 132,
           "uptime_24h_percent": 93.19,
           "ping_history": [
-            {
-              "timestamp": "2026-05-20T13:02:42.971000+00:00",
-              "status": "up",
-              "ping_ms": 123
-            },
-            {
-              "timestamp": "2026-05-20T13:03:42.972000+00:00",
-              "status": "up",
-              "ping_ms": 159
-            },
-            {
-              "timestamp": "2026-05-20T13:04:42.972000+00:00",
-              "status": "up",
-              "ping_ms": 135
-            },
-            {
-              "timestamp": "2026-05-20T13:05:42.973000+00:00",
-              "status": "up",
-              "ping_ms": 141
-            },
-            {
-              "timestamp": "2026-05-20T13:06:42.972000+00:00",
-              "status": "up",
-              "ping_ms": 141
-            },
-            {
-              "timestamp": "2026-05-20T13:07:42.973000+00:00",
-              "status": "up",
-              "ping_ms": 141
-            },
             {
               "timestamp": "2026-05-20T13:08:42.974000+00:00",
               "status": "up",
@@ -2787,6 +2765,36 @@
               "timestamp": "2026-05-20T14:41:42.998000+00:00",
               "status": "up",
               "ping_ms": 187
+            },
+            {
+              "timestamp": "2026-05-20T14:42:42.998000+00:00",
+              "status": "up",
+              "ping_ms": 150
+            },
+            {
+              "timestamp": "2026-05-20T14:43:42.998000+00:00",
+              "status": "up",
+              "ping_ms": 254
+            },
+            {
+              "timestamp": "2026-05-20T14:44:42.998000+00:00",
+              "status": "up",
+              "ping_ms": 140
+            },
+            {
+              "timestamp": "2026-05-20T14:45:42.998000+00:00",
+              "status": "up",
+              "ping_ms": 211
+            },
+            {
+              "timestamp": "2026-05-20T14:46:42.999000+00:00",
+              "status": "up",
+              "ping_ms": 128
+            },
+            {
+              "timestamp": "2026-05-20T14:47:43+00:00",
+              "status": "up",
+              "ping_ms": 132
             }
           ]
         },
@@ -2794,39 +2802,9 @@
           "key": "nexum-nexum-tracker",
           "label": "Nexum - Tracker",
           "status": "up",
-          "ping_ms": 49,
+          "ping_ms": 73,
           "uptime_24h_percent": 93.26,
           "ping_history": [
-            {
-              "timestamp": "2026-05-20T13:02:42.470000+00:00",
-              "status": "up",
-              "ping_ms": 72
-            },
-            {
-              "timestamp": "2026-05-20T13:03:42.470000+00:00",
-              "status": "up",
-              "ping_ms": 54
-            },
-            {
-              "timestamp": "2026-05-20T13:04:42.470000+00:00",
-              "status": "up",
-              "ping_ms": 53
-            },
-            {
-              "timestamp": "2026-05-20T13:05:42.470000+00:00",
-              "status": "up",
-              "ping_ms": 77
-            },
-            {
-              "timestamp": "2026-05-20T13:06:42.471000+00:00",
-              "status": "up",
-              "ping_ms": 58
-            },
-            {
-              "timestamp": "2026-05-20T13:07:42.472000+00:00",
-              "status": "up",
-              "ping_ms": 51
-            },
             {
               "timestamp": "2026-05-20T13:08:42.474000+00:00",
               "status": "up",
@@ -3296,6 +3274,36 @@
               "timestamp": "2026-05-20T14:41:42.676000+00:00",
               "status": "up",
               "ping_ms": 49
+            },
+            {
+              "timestamp": "2026-05-20T14:42:42.677000+00:00",
+              "status": "up",
+              "ping_ms": 65
+            },
+            {
+              "timestamp": "2026-05-20T14:43:42.679000+00:00",
+              "status": "up",
+              "ping_ms": 76
+            },
+            {
+              "timestamp": "2026-05-20T14:44:42.679000+00:00",
+              "status": "up",
+              "ping_ms": 61
+            },
+            {
+              "timestamp": "2026-05-20T14:45:42.680000+00:00",
+              "status": "up",
+              "ping_ms": 59
+            },
+            {
+              "timestamp": "2026-05-20T14:46:42.681000+00:00",
+              "status": "up",
+              "ping_ms": 60
+            },
+            {
+              "timestamp": "2026-05-20T14:47:42.681000+00:00",
+              "status": "up",
+              "ping_ms": 73
             }
           ]
         },
@@ -3303,39 +3311,9 @@
           "key": "nexum-nexum-irc",
           "label": "Nexum - IRC",
           "status": "up",
-          "ping_ms": 26,
+          "ping_ms": 27,
           "uptime_24h_percent": 99.79,
           "ping_history": [
-            {
-              "timestamp": "2026-05-20T13:02:42.970000+00:00",
-              "status": "up",
-              "ping_ms": 27
-            },
-            {
-              "timestamp": "2026-05-20T13:03:42.970000+00:00",
-              "status": "up",
-              "ping_ms": 27
-            },
-            {
-              "timestamp": "2026-05-20T13:04:42.971000+00:00",
-              "status": "up",
-              "ping_ms": 26
-            },
-            {
-              "timestamp": "2026-05-20T13:05:42.971000+00:00",
-              "status": "up",
-              "ping_ms": 27
-            },
-            {
-              "timestamp": "2026-05-20T13:06:42.972000+00:00",
-              "status": "up",
-              "ping_ms": 26
-            },
-            {
-              "timestamp": "2026-05-20T13:07:42.973000+00:00",
-              "status": "up",
-              "ping_ms": 27
-            },
             {
               "timestamp": "2026-05-20T13:08:42.973000+00:00",
               "status": "up",
@@ -3805,6 +3783,36 @@
               "timestamp": "2026-05-20T14:41:42.994000+00:00",
               "status": "up",
               "ping_ms": 26
+            },
+            {
+              "timestamp": "2026-05-20T14:42:42.994000+00:00",
+              "status": "up",
+              "ping_ms": 26
+            },
+            {
+              "timestamp": "2026-05-20T14:43:42.994000+00:00",
+              "status": "up",
+              "ping_ms": 27
+            },
+            {
+              "timestamp": "2026-05-20T14:44:42.996000+00:00",
+              "status": "up",
+              "ping_ms": 26
+            },
+            {
+              "timestamp": "2026-05-20T14:45:42.997000+00:00",
+              "status": "up",
+              "ping_ms": 27
+            },
+            {
+              "timestamp": "2026-05-20T14:46:42.998000+00:00",
+              "status": "up",
+              "ping_ms": 27
+            },
+            {
+              "timestamp": "2026-05-20T14:47:42.999000+00:00",
+              "status": "up",
+              "ping_ms": 27
             }
           ]
         }
@@ -3815,7 +3823,7 @@
       "provider": "official",
       "label": "Statut officiel La-Cale",
       "status_url": "https://status.la-cale.space/status/default",
-      "updated_at": "2026-05-20T14:41:57.048568+00:00",
+      "updated_at": "2026-05-20T14:48:20.396050+00:00",
       "services": []
     }
   ]
