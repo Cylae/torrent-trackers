@@ -2,7 +2,7 @@
   "schema_version": 2,
   "script_version": "2026.05.28.1",
   "site_title": "Trackers status",
-  "updated_at": "2026-06-17T07:04:45.438004+00:00",
+  "updated_at": "2026-06-17T07:09:38.909355+00:00",
   "display_timezone": "Europe/Paris",
   "history_started_at": "2026-05-05T10:00:00+00:00",
   "retention_days": 30,
@@ -23,7 +23,7 @@
       "status": "down",
       "history_started_at": "2026-05-05T10:00:00+00:00",
       "down_since": "2026-04-27T11:54:21.106419+00:00",
-      "current_downtime_seconds": 4389024,
+      "current_downtime_seconds": 4389317,
       "last_error": "La page principale a retourné HTTP 521 for https://forum.torr9.xyz/"
     },
     {
@@ -60,7 +60,7 @@
       "label": "Forum Torr9",
       "started_at": "2026-04-27T11:54:21.106419+00:00",
       "ended_at": null,
-      "duration_seconds": 4389024,
+      "duration_seconds": 4389317,
       "last_error": "La page principale a retourné HTTP 521 for https://forum.torr9.xyz/"
     },
     {
@@ -1443,51 +1443,1554 @@
   "external_status": [
     {
       "target_key": "gemini",
-      "provider": "official",
+      "provider": "uptime-kuma",
       "label": "Statut officiel Gemini",
       "status_url": "https://status.gemini-tracker.org/status/gemini",
-      "updated_at": "2026-06-17T07:04:45.438004+00:00",
-      "services": []
+      "updated_at": "2026-06-17T07:09:38.909355+00:00",
+      "services": [
+        {
+          "key": "gemini-gemini-tracker-site",
+          "label": "Gemini-Tracker Site",
+          "status": "up",
+          "ping_ms": 378,
+          "uptime_24h_percent": 95.56,
+          "ping_history": [
+            {
+              "timestamp": "2026-06-17T05:30:19.800000+00:00",
+              "status": "up",
+              "ping_ms": 340
+            },
+            {
+              "timestamp": "2026-06-17T05:31:19.800000+00:00",
+              "status": "up",
+              "ping_ms": 322
+            },
+            {
+              "timestamp": "2026-06-17T05:32:19.800000+00:00",
+              "status": "up",
+              "ping_ms": 280
+            },
+            {
+              "timestamp": "2026-06-17T05:33:19.799000+00:00",
+              "status": "up",
+              "ping_ms": 270
+            },
+            {
+              "timestamp": "2026-06-17T05:34:19.800000+00:00",
+              "status": "up",
+              "ping_ms": 296
+            },
+            {
+              "timestamp": "2026-06-17T05:35:19.800000+00:00",
+              "status": "up",
+              "ping_ms": 410
+            },
+            {
+              "timestamp": "2026-06-17T05:36:19.802000+00:00",
+              "status": "up",
+              "ping_ms": 313
+            },
+            {
+              "timestamp": "2026-06-17T05:37:19.803000+00:00",
+              "status": "up",
+              "ping_ms": 317
+            },
+            {
+              "timestamp": "2026-06-17T05:38:19.803000+00:00",
+              "status": "up",
+              "ping_ms": 275
+            },
+            {
+              "timestamp": "2026-06-17T05:39:19.805000+00:00",
+              "status": "up",
+              "ping_ms": 297
+            },
+            {
+              "timestamp": "2026-06-17T05:40:19.805000+00:00",
+              "status": "up",
+              "ping_ms": 302
+            },
+            {
+              "timestamp": "2026-06-17T05:41:19.805000+00:00",
+              "status": "up",
+              "ping_ms": 280
+            },
+            {
+              "timestamp": "2026-06-17T05:42:19.806000+00:00",
+              "status": "up",
+              "ping_ms": 293
+            },
+            {
+              "timestamp": "2026-06-17T05:43:19.807000+00:00",
+              "status": "up",
+              "ping_ms": 292
+            },
+            {
+              "timestamp": "2026-06-17T05:44:19.807000+00:00",
+              "status": "up",
+              "ping_ms": 304
+            },
+            {
+              "timestamp": "2026-06-17T05:45:19.806000+00:00",
+              "status": "up",
+              "ping_ms": 256
+            },
+            {
+              "timestamp": "2026-06-17T05:46:19.806000+00:00",
+              "status": "up",
+              "ping_ms": 315
+            },
+            {
+              "timestamp": "2026-06-17T05:47:19.807000+00:00",
+              "status": "up",
+              "ping_ms": 291
+            },
+            {
+              "timestamp": "2026-06-17T05:48:19.807000+00:00",
+              "status": "up",
+              "ping_ms": 323
+            },
+            {
+              "timestamp": "2026-06-17T05:49:19.807000+00:00",
+              "status": "up",
+              "ping_ms": 299
+            },
+            {
+              "timestamp": "2026-06-17T05:50:19.807000+00:00",
+              "status": "up",
+              "ping_ms": 314
+            },
+            {
+              "timestamp": "2026-06-17T05:51:19.807000+00:00",
+              "status": "up",
+              "ping_ms": 305
+            },
+            {
+              "timestamp": "2026-06-17T05:52:19.807000+00:00",
+              "status": "up",
+              "ping_ms": 275
+            },
+            {
+              "timestamp": "2026-06-17T05:53:19.808000+00:00",
+              "status": "up",
+              "ping_ms": 307
+            },
+            {
+              "timestamp": "2026-06-17T05:54:19.807000+00:00",
+              "status": "up",
+              "ping_ms": 301
+            },
+            {
+              "timestamp": "2026-06-17T05:55:19.808000+00:00",
+              "status": "up",
+              "ping_ms": 282
+            },
+            {
+              "timestamp": "2026-06-17T05:56:19.808000+00:00",
+              "status": "up",
+              "ping_ms": 291
+            },
+            {
+              "timestamp": "2026-06-17T05:57:19.808000+00:00",
+              "status": "up",
+              "ping_ms": 283
+            },
+            {
+              "timestamp": "2026-06-17T05:58:19.808000+00:00",
+              "status": "up",
+              "ping_ms": 257
+            },
+            {
+              "timestamp": "2026-06-17T05:59:19.809000+00:00",
+              "status": "up",
+              "ping_ms": 293
+            },
+            {
+              "timestamp": "2026-06-17T06:00:19.810000+00:00",
+              "status": "up",
+              "ping_ms": 303
+            },
+            {
+              "timestamp": "2026-06-17T06:01:19.811000+00:00",
+              "status": "up",
+              "ping_ms": 339
+            },
+            {
+              "timestamp": "2026-06-17T06:02:19.811000+00:00",
+              "status": "up",
+              "ping_ms": 268
+            },
+            {
+              "timestamp": "2026-06-17T06:03:19.811000+00:00",
+              "status": "up",
+              "ping_ms": 284
+            },
+            {
+              "timestamp": "2026-06-17T06:04:19.811000+00:00",
+              "status": "up",
+              "ping_ms": 309
+            },
+            {
+              "timestamp": "2026-06-17T06:05:19.811000+00:00",
+              "status": "up",
+              "ping_ms": 269
+            },
+            {
+              "timestamp": "2026-06-17T06:06:19.812000+00:00",
+              "status": "up",
+              "ping_ms": 257
+            },
+            {
+              "timestamp": "2026-06-17T06:07:19.812000+00:00",
+              "status": "up",
+              "ping_ms": 395
+            },
+            {
+              "timestamp": "2026-06-17T06:08:19.813000+00:00",
+              "status": "up",
+              "ping_ms": 305
+            },
+            {
+              "timestamp": "2026-06-17T06:09:19.814000+00:00",
+              "status": "up",
+              "ping_ms": 293
+            },
+            {
+              "timestamp": "2026-06-17T06:10:19.815000+00:00",
+              "status": "up",
+              "ping_ms": 306
+            },
+            {
+              "timestamp": "2026-06-17T06:11:19.815000+00:00",
+              "status": "up",
+              "ping_ms": 265
+            },
+            {
+              "timestamp": "2026-06-17T06:12:19.816000+00:00",
+              "status": "up",
+              "ping_ms": 293
+            },
+            {
+              "timestamp": "2026-06-17T06:13:19.816000+00:00",
+              "status": "up",
+              "ping_ms": 335
+            },
+            {
+              "timestamp": "2026-06-17T06:14:19.818000+00:00",
+              "status": "up",
+              "ping_ms": 304
+            },
+            {
+              "timestamp": "2026-06-17T06:15:19.819000+00:00",
+              "status": "up",
+              "ping_ms": 295
+            },
+            {
+              "timestamp": "2026-06-17T06:16:19.819000+00:00",
+              "status": "up",
+              "ping_ms": 292
+            },
+            {
+              "timestamp": "2026-06-17T06:17:19.819000+00:00",
+              "status": "up",
+              "ping_ms": 322
+            },
+            {
+              "timestamp": "2026-06-17T06:18:19.819000+00:00",
+              "status": "up",
+              "ping_ms": 302
+            },
+            {
+              "timestamp": "2026-06-17T06:19:19.819000+00:00",
+              "status": "up",
+              "ping_ms": 294
+            },
+            {
+              "timestamp": "2026-06-17T06:20:19.820000+00:00",
+              "status": "up",
+              "ping_ms": 297
+            },
+            {
+              "timestamp": "2026-06-17T06:21:19.821000+00:00",
+              "status": "up",
+              "ping_ms": 264
+            },
+            {
+              "timestamp": "2026-06-17T06:22:19.821000+00:00",
+              "status": "up",
+              "ping_ms": 296
+            },
+            {
+              "timestamp": "2026-06-17T06:23:19.823000+00:00",
+              "status": "up",
+              "ping_ms": 294
+            },
+            {
+              "timestamp": "2026-06-17T06:24:19.824000+00:00",
+              "status": "up",
+              "ping_ms": 255
+            },
+            {
+              "timestamp": "2026-06-17T06:25:19.825000+00:00",
+              "status": "up",
+              "ping_ms": 316
+            },
+            {
+              "timestamp": "2026-06-17T06:26:19.826000+00:00",
+              "status": "up",
+              "ping_ms": 296
+            },
+            {
+              "timestamp": "2026-06-17T06:27:19.826000+00:00",
+              "status": "up",
+              "ping_ms": 271
+            },
+            {
+              "timestamp": "2026-06-17T06:28:19.826000+00:00",
+              "status": "up",
+              "ping_ms": 273
+            },
+            {
+              "timestamp": "2026-06-17T06:29:19.827000+00:00",
+              "status": "up",
+              "ping_ms": 388
+            },
+            {
+              "timestamp": "2026-06-17T06:30:19.828000+00:00",
+              "status": "up",
+              "ping_ms": 331
+            },
+            {
+              "timestamp": "2026-06-17T06:31:19.828000+00:00",
+              "status": "up",
+              "ping_ms": 304
+            },
+            {
+              "timestamp": "2026-06-17T06:32:19.829000+00:00",
+              "status": "degraded",
+              "ping_ms": null
+            },
+            {
+              "timestamp": "2026-06-17T06:33:19.830000+00:00",
+              "status": "degraded",
+              "ping_ms": null
+            },
+            {
+              "timestamp": "2026-06-17T06:34:19.830000+00:00",
+              "status": "up",
+              "ping_ms": 300
+            },
+            {
+              "timestamp": "2026-06-17T06:35:19.831000+00:00",
+              "status": "up",
+              "ping_ms": 283
+            },
+            {
+              "timestamp": "2026-06-17T06:36:19.832000+00:00",
+              "status": "up",
+              "ping_ms": 309
+            },
+            {
+              "timestamp": "2026-06-17T06:37:19.834000+00:00",
+              "status": "up",
+              "ping_ms": 285
+            },
+            {
+              "timestamp": "2026-06-17T06:38:19.834000+00:00",
+              "status": "up",
+              "ping_ms": 274
+            },
+            {
+              "timestamp": "2026-06-17T06:39:19.834000+00:00",
+              "status": "up",
+              "ping_ms": 272
+            },
+            {
+              "timestamp": "2026-06-17T06:40:19.835000+00:00",
+              "status": "up",
+              "ping_ms": 284
+            },
+            {
+              "timestamp": "2026-06-17T06:41:19.835000+00:00",
+              "status": "up",
+              "ping_ms": 269
+            },
+            {
+              "timestamp": "2026-06-17T06:42:19.835000+00:00",
+              "status": "up",
+              "ping_ms": 302
+            },
+            {
+              "timestamp": "2026-06-17T06:43:19.835000+00:00",
+              "status": "up",
+              "ping_ms": 326
+            },
+            {
+              "timestamp": "2026-06-17T06:44:19.835000+00:00",
+              "status": "up",
+              "ping_ms": 301
+            },
+            {
+              "timestamp": "2026-06-17T06:45:19.836000+00:00",
+              "status": "up",
+              "ping_ms": 299
+            },
+            {
+              "timestamp": "2026-06-17T06:46:19.836000+00:00",
+              "status": "up",
+              "ping_ms": 307
+            },
+            {
+              "timestamp": "2026-06-17T06:47:19.836000+00:00",
+              "status": "up",
+              "ping_ms": 288
+            },
+            {
+              "timestamp": "2026-06-17T06:48:19.835000+00:00",
+              "status": "up",
+              "ping_ms": 290
+            },
+            {
+              "timestamp": "2026-06-17T06:49:19.835000+00:00",
+              "status": "up",
+              "ping_ms": 298
+            },
+            {
+              "timestamp": "2026-06-17T06:50:19.835000+00:00",
+              "status": "up",
+              "ping_ms": 289
+            },
+            {
+              "timestamp": "2026-06-17T06:51:19.836000+00:00",
+              "status": "up",
+              "ping_ms": 263
+            },
+            {
+              "timestamp": "2026-06-17T06:52:19.836000+00:00",
+              "status": "up",
+              "ping_ms": 321
+            },
+            {
+              "timestamp": "2026-06-17T06:53:19.836000+00:00",
+              "status": "up",
+              "ping_ms": 302
+            },
+            {
+              "timestamp": "2026-06-17T06:54:19.836000+00:00",
+              "status": "up",
+              "ping_ms": 263
+            },
+            {
+              "timestamp": "2026-06-17T06:55:19.836000+00:00",
+              "status": "up",
+              "ping_ms": 273
+            },
+            {
+              "timestamp": "2026-06-17T06:56:19.836000+00:00",
+              "status": "up",
+              "ping_ms": 349
+            },
+            {
+              "timestamp": "2026-06-17T06:57:19.837000+00:00",
+              "status": "up",
+              "ping_ms": 305
+            },
+            {
+              "timestamp": "2026-06-17T06:58:19.837000+00:00",
+              "status": "up",
+              "ping_ms": 302
+            },
+            {
+              "timestamp": "2026-06-17T06:59:19.838000+00:00",
+              "status": "up",
+              "ping_ms": 336
+            },
+            {
+              "timestamp": "2026-06-17T07:00:19.840000+00:00",
+              "status": "up",
+              "ping_ms": 294
+            },
+            {
+              "timestamp": "2026-06-17T07:01:19.840000+00:00",
+              "status": "up",
+              "ping_ms": 286
+            },
+            {
+              "timestamp": "2026-06-17T07:02:19.840000+00:00",
+              "status": "up",
+              "ping_ms": 287
+            },
+            {
+              "timestamp": "2026-06-17T07:03:19.840000+00:00",
+              "status": "up",
+              "ping_ms": 271
+            },
+            {
+              "timestamp": "2026-06-17T07:04:19.840000+00:00",
+              "status": "up",
+              "ping_ms": 277
+            },
+            {
+              "timestamp": "2026-06-17T07:05:19.841000+00:00",
+              "status": "degraded",
+              "ping_ms": null
+            },
+            {
+              "timestamp": "2026-06-17T07:06:19.841000+00:00",
+              "status": "up",
+              "ping_ms": 1679
+            },
+            {
+              "timestamp": "2026-06-17T07:07:19.842000+00:00",
+              "status": "up",
+              "ping_ms": 302
+            },
+            {
+              "timestamp": "2026-06-17T07:08:19.843000+00:00",
+              "status": "up",
+              "ping_ms": 308
+            },
+            {
+              "timestamp": "2026-06-17T07:09:19.843000+00:00",
+              "status": "up",
+              "ping_ms": 378
+            }
+          ]
+        },
+        {
+          "key": "gemini-gemini-tracker-tracker",
+          "label": "Gemini-Tracker Tracker",
+          "status": "up",
+          "ping_ms": 4,
+          "uptime_24h_percent": 100.0,
+          "ping_history": [
+            {
+              "timestamp": "2026-06-17T05:30:24.811000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T05:31:24.811000+00:00",
+              "status": "up",
+              "ping_ms": 3
+            },
+            {
+              "timestamp": "2026-06-17T05:32:24.812000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T05:33:24.812000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T05:34:24.812000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T05:35:24.812000+00:00",
+              "status": "up",
+              "ping_ms": 3
+            },
+            {
+              "timestamp": "2026-06-17T05:36:24.812000+00:00",
+              "status": "up",
+              "ping_ms": 3
+            },
+            {
+              "timestamp": "2026-06-17T05:37:24.812000+00:00",
+              "status": "up",
+              "ping_ms": 3
+            },
+            {
+              "timestamp": "2026-06-17T05:38:24.813000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T05:39:24.814000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T05:40:24.815000+00:00",
+              "status": "up",
+              "ping_ms": 6
+            },
+            {
+              "timestamp": "2026-06-17T05:41:24.816000+00:00",
+              "status": "up",
+              "ping_ms": 5
+            },
+            {
+              "timestamp": "2026-06-17T05:42:24.816000+00:00",
+              "status": "up",
+              "ping_ms": 1
+            },
+            {
+              "timestamp": "2026-06-17T05:43:24.816000+00:00",
+              "status": "up",
+              "ping_ms": 2
+            },
+            {
+              "timestamp": "2026-06-17T05:44:24.817000+00:00",
+              "status": "up",
+              "ping_ms": 1
+            },
+            {
+              "timestamp": "2026-06-17T05:45:24.817000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T05:46:24.817000+00:00",
+              "status": "up",
+              "ping_ms": 3
+            },
+            {
+              "timestamp": "2026-06-17T05:47:24.818000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T05:48:24.819000+00:00",
+              "status": "up",
+              "ping_ms": 1
+            },
+            {
+              "timestamp": "2026-06-17T05:49:24.819000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T05:50:24.820000+00:00",
+              "status": "up",
+              "ping_ms": 3
+            },
+            {
+              "timestamp": "2026-06-17T05:51:24.820000+00:00",
+              "status": "up",
+              "ping_ms": 1
+            },
+            {
+              "timestamp": "2026-06-17T05:52:24.820000+00:00",
+              "status": "up",
+              "ping_ms": 2
+            },
+            {
+              "timestamp": "2026-06-17T05:53:24.821000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T05:54:24.821000+00:00",
+              "status": "up",
+              "ping_ms": 3
+            },
+            {
+              "timestamp": "2026-06-17T05:55:24.821000+00:00",
+              "status": "up",
+              "ping_ms": 3
+            },
+            {
+              "timestamp": "2026-06-17T05:56:24.821000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T05:57:24.821000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T05:58:24.822000+00:00",
+              "status": "up",
+              "ping_ms": 1
+            },
+            {
+              "timestamp": "2026-06-17T05:59:24.822000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T06:00:24.822000+00:00",
+              "status": "up",
+              "ping_ms": 2
+            },
+            {
+              "timestamp": "2026-06-17T06:01:24.822000+00:00",
+              "status": "up",
+              "ping_ms": 2
+            },
+            {
+              "timestamp": "2026-06-17T06:02:24.822000+00:00",
+              "status": "up",
+              "ping_ms": 3
+            },
+            {
+              "timestamp": "2026-06-17T06:03:24.822000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T06:04:24.822000+00:00",
+              "status": "up",
+              "ping_ms": 2
+            },
+            {
+              "timestamp": "2026-06-17T06:05:24.823000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T06:06:24.823000+00:00",
+              "status": "up",
+              "ping_ms": 2
+            },
+            {
+              "timestamp": "2026-06-17T06:07:24.823000+00:00",
+              "status": "up",
+              "ping_ms": 2
+            },
+            {
+              "timestamp": "2026-06-17T06:08:24.823000+00:00",
+              "status": "up",
+              "ping_ms": 1
+            },
+            {
+              "timestamp": "2026-06-17T06:09:24.823000+00:00",
+              "status": "up",
+              "ping_ms": 3
+            },
+            {
+              "timestamp": "2026-06-17T06:10:24.823000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T06:11:24.824000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T06:12:24.825000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T06:13:24.825000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T06:14:24.825000+00:00",
+              "status": "up",
+              "ping_ms": 1
+            },
+            {
+              "timestamp": "2026-06-17T06:15:24.825000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T06:16:24.826000+00:00",
+              "status": "up",
+              "ping_ms": 1
+            },
+            {
+              "timestamp": "2026-06-17T06:17:24.827000+00:00",
+              "status": "up",
+              "ping_ms": 2
+            },
+            {
+              "timestamp": "2026-06-17T06:18:24.827000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T06:19:24.828000+00:00",
+              "status": "up",
+              "ping_ms": 7
+            },
+            {
+              "timestamp": "2026-06-17T06:20:24.828000+00:00",
+              "status": "up",
+              "ping_ms": 3
+            },
+            {
+              "timestamp": "2026-06-17T06:21:24.828000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T06:22:24.828000+00:00",
+              "status": "up",
+              "ping_ms": 1
+            },
+            {
+              "timestamp": "2026-06-17T06:23:24.828000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T06:24:24.830000+00:00",
+              "status": "up",
+              "ping_ms": 3
+            },
+            {
+              "timestamp": "2026-06-17T06:25:24.830000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T06:26:24.831000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T06:27:24.833000+00:00",
+              "status": "up",
+              "ping_ms": 3
+            },
+            {
+              "timestamp": "2026-06-17T06:28:24.833000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T06:29:24.833000+00:00",
+              "status": "up",
+              "ping_ms": 1
+            },
+            {
+              "timestamp": "2026-06-17T06:30:24.834000+00:00",
+              "status": "up",
+              "ping_ms": 3
+            },
+            {
+              "timestamp": "2026-06-17T06:31:24.834000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T06:32:24.834000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T06:33:24.834000+00:00",
+              "status": "up",
+              "ping_ms": 2
+            },
+            {
+              "timestamp": "2026-06-17T06:34:24.835000+00:00",
+              "status": "up",
+              "ping_ms": 1
+            },
+            {
+              "timestamp": "2026-06-17T06:35:24.836000+00:00",
+              "status": "up",
+              "ping_ms": 2
+            },
+            {
+              "timestamp": "2026-06-17T06:36:24.836000+00:00",
+              "status": "up",
+              "ping_ms": 2
+            },
+            {
+              "timestamp": "2026-06-17T06:37:24.836000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T06:38:24.837000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T06:39:24.838000+00:00",
+              "status": "up",
+              "ping_ms": 5
+            },
+            {
+              "timestamp": "2026-06-17T06:40:24.838000+00:00",
+              "status": "up",
+              "ping_ms": 3
+            },
+            {
+              "timestamp": "2026-06-17T06:41:24.838000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T06:42:24.839000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T06:43:24.839000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T06:44:24.841000+00:00",
+              "status": "up",
+              "ping_ms": 5
+            },
+            {
+              "timestamp": "2026-06-17T06:45:24.842000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T06:46:24.842000+00:00",
+              "status": "up",
+              "ping_ms": 1
+            },
+            {
+              "timestamp": "2026-06-17T06:47:24.842000+00:00",
+              "status": "up",
+              "ping_ms": 3
+            },
+            {
+              "timestamp": "2026-06-17T06:48:24.842000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T06:49:24.841000+00:00",
+              "status": "up",
+              "ping_ms": 1
+            },
+            {
+              "timestamp": "2026-06-17T06:50:24.842000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T06:51:24.842000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T06:52:24.842000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T06:53:24.842000+00:00",
+              "status": "up",
+              "ping_ms": 1
+            },
+            {
+              "timestamp": "2026-06-17T06:54:24.844000+00:00",
+              "status": "up",
+              "ping_ms": 3
+            },
+            {
+              "timestamp": "2026-06-17T06:55:24.844000+00:00",
+              "status": "up",
+              "ping_ms": 1
+            },
+            {
+              "timestamp": "2026-06-17T06:56:24.844000+00:00",
+              "status": "up",
+              "ping_ms": 1
+            },
+            {
+              "timestamp": "2026-06-17T06:57:24.844000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T06:58:24.844000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T06:59:24.845000+00:00",
+              "status": "up",
+              "ping_ms": 1
+            },
+            {
+              "timestamp": "2026-06-17T07:00:24.845000+00:00",
+              "status": "up",
+              "ping_ms": 3
+            },
+            {
+              "timestamp": "2026-06-17T07:01:24.846000+00:00",
+              "status": "up",
+              "ping_ms": 3
+            },
+            {
+              "timestamp": "2026-06-17T07:02:24.846000+00:00",
+              "status": "up",
+              "ping_ms": 6
+            },
+            {
+              "timestamp": "2026-06-17T07:03:24.847000+00:00",
+              "status": "up",
+              "ping_ms": 3
+            },
+            {
+              "timestamp": "2026-06-17T07:04:24.848000+00:00",
+              "status": "up",
+              "ping_ms": 5
+            },
+            {
+              "timestamp": "2026-06-17T07:05:24.849000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T07:06:24.850000+00:00",
+              "status": "up",
+              "ping_ms": 3
+            },
+            {
+              "timestamp": "2026-06-17T07:07:24.851000+00:00",
+              "status": "up",
+              "ping_ms": 3
+            },
+            {
+              "timestamp": "2026-06-17T07:08:24.851000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            },
+            {
+              "timestamp": "2026-06-17T07:09:24.851000+00:00",
+              "status": "up",
+              "ping_ms": 4
+            }
+          ]
+        },
+        {
+          "key": "gemini-gemini-tracker-api",
+          "label": "Gemini-Tracker API",
+          "status": "up",
+          "ping_ms": 77,
+          "uptime_24h_percent": 100.0,
+          "ping_history": [
+            {
+              "timestamp": "2026-06-17T05:30:01.099000+00:00",
+              "status": "up",
+              "ping_ms": 31
+            },
+            {
+              "timestamp": "2026-06-17T05:31:01.099000+00:00",
+              "status": "up",
+              "ping_ms": 48
+            },
+            {
+              "timestamp": "2026-06-17T05:32:01.099000+00:00",
+              "status": "up",
+              "ping_ms": 33
+            },
+            {
+              "timestamp": "2026-06-17T05:33:01.100000+00:00",
+              "status": "up",
+              "ping_ms": 56
+            },
+            {
+              "timestamp": "2026-06-17T05:34:01.105000+00:00",
+              "status": "up",
+              "ping_ms": 38
+            },
+            {
+              "timestamp": "2026-06-17T05:35:01.104000+00:00",
+              "status": "up",
+              "ping_ms": 36
+            },
+            {
+              "timestamp": "2026-06-17T05:36:01.104000+00:00",
+              "status": "up",
+              "ping_ms": 46
+            },
+            {
+              "timestamp": "2026-06-17T05:37:01.104000+00:00",
+              "status": "up",
+              "ping_ms": 41
+            },
+            {
+              "timestamp": "2026-06-17T05:38:01.105000+00:00",
+              "status": "up",
+              "ping_ms": 71
+            },
+            {
+              "timestamp": "2026-06-17T05:39:01.106000+00:00",
+              "status": "up",
+              "ping_ms": 36
+            },
+            {
+              "timestamp": "2026-06-17T05:40:01.107000+00:00",
+              "status": "up",
+              "ping_ms": 47
+            },
+            {
+              "timestamp": "2026-06-17T05:41:01.108000+00:00",
+              "status": "up",
+              "ping_ms": 57
+            },
+            {
+              "timestamp": "2026-06-17T05:42:01.109000+00:00",
+              "status": "up",
+              "ping_ms": 69
+            },
+            {
+              "timestamp": "2026-06-17T05:43:01.109000+00:00",
+              "status": "up",
+              "ping_ms": 79
+            },
+            {
+              "timestamp": "2026-06-17T05:44:01.109000+00:00",
+              "status": "up",
+              "ping_ms": 73
+            },
+            {
+              "timestamp": "2026-06-17T05:45:01.110000+00:00",
+              "status": "up",
+              "ping_ms": 34
+            },
+            {
+              "timestamp": "2026-06-17T05:46:01.110000+00:00",
+              "status": "up",
+              "ping_ms": 77
+            },
+            {
+              "timestamp": "2026-06-17T05:47:01.111000+00:00",
+              "status": "up",
+              "ping_ms": 84
+            },
+            {
+              "timestamp": "2026-06-17T05:48:01.112000+00:00",
+              "status": "up",
+              "ping_ms": 78
+            },
+            {
+              "timestamp": "2026-06-17T05:49:01.113000+00:00",
+              "status": "up",
+              "ping_ms": 66
+            },
+            {
+              "timestamp": "2026-06-17T05:50:01.113000+00:00",
+              "status": "up",
+              "ping_ms": 79
+            },
+            {
+              "timestamp": "2026-06-17T05:51:01.113000+00:00",
+              "status": "up",
+              "ping_ms": 78
+            },
+            {
+              "timestamp": "2026-06-17T05:52:01.114000+00:00",
+              "status": "up",
+              "ping_ms": 82
+            },
+            {
+              "timestamp": "2026-06-17T05:53:01.114000+00:00",
+              "status": "up",
+              "ping_ms": 53
+            },
+            {
+              "timestamp": "2026-06-17T05:54:01.114000+00:00",
+              "status": "up",
+              "ping_ms": 40
+            },
+            {
+              "timestamp": "2026-06-17T05:55:01.115000+00:00",
+              "status": "up",
+              "ping_ms": 37
+            },
+            {
+              "timestamp": "2026-06-17T05:56:01.115000+00:00",
+              "status": "up",
+              "ping_ms": 37
+            },
+            {
+              "timestamp": "2026-06-17T05:57:01.116000+00:00",
+              "status": "up",
+              "ping_ms": 79
+            },
+            {
+              "timestamp": "2026-06-17T05:58:01.116000+00:00",
+              "status": "up",
+              "ping_ms": 70
+            },
+            {
+              "timestamp": "2026-06-17T05:59:01.116000+00:00",
+              "status": "up",
+              "ping_ms": 42
+            },
+            {
+              "timestamp": "2026-06-17T06:00:01.116000+00:00",
+              "status": "up",
+              "ping_ms": 40
+            },
+            {
+              "timestamp": "2026-06-17T06:01:01.115000+00:00",
+              "status": "up",
+              "ping_ms": 30
+            },
+            {
+              "timestamp": "2026-06-17T06:02:01.117000+00:00",
+              "status": "up",
+              "ping_ms": 81
+            },
+            {
+              "timestamp": "2026-06-17T06:03:01.117000+00:00",
+              "status": "up",
+              "ping_ms": 75
+            },
+            {
+              "timestamp": "2026-06-17T06:04:01.118000+00:00",
+              "status": "up",
+              "ping_ms": 33
+            },
+            {
+              "timestamp": "2026-06-17T06:05:01.118000+00:00",
+              "status": "up",
+              "ping_ms": 46
+            },
+            {
+              "timestamp": "2026-06-17T06:06:01.118000+00:00",
+              "status": "up",
+              "ping_ms": 75
+            },
+            {
+              "timestamp": "2026-06-17T06:07:01.119000+00:00",
+              "status": "up",
+              "ping_ms": 75
+            },
+            {
+              "timestamp": "2026-06-17T06:08:01.119000+00:00",
+              "status": "up",
+              "ping_ms": 40
+            },
+            {
+              "timestamp": "2026-06-17T06:09:01.120000+00:00",
+              "status": "up",
+              "ping_ms": 43
+            },
+            {
+              "timestamp": "2026-06-17T06:10:01.122000+00:00",
+              "status": "up",
+              "ping_ms": 66
+            },
+            {
+              "timestamp": "2026-06-17T06:11:01.123000+00:00",
+              "status": "up",
+              "ping_ms": 92
+            },
+            {
+              "timestamp": "2026-06-17T06:12:01.123000+00:00",
+              "status": "up",
+              "ping_ms": 69
+            },
+            {
+              "timestamp": "2026-06-17T06:13:01.123000+00:00",
+              "status": "up",
+              "ping_ms": 77
+            },
+            {
+              "timestamp": "2026-06-17T06:14:01.124000+00:00",
+              "status": "up",
+              "ping_ms": 76
+            },
+            {
+              "timestamp": "2026-06-17T06:15:01.124000+00:00",
+              "status": "up",
+              "ping_ms": 34
+            },
+            {
+              "timestamp": "2026-06-17T06:16:01.124000+00:00",
+              "status": "up",
+              "ping_ms": 78
+            },
+            {
+              "timestamp": "2026-06-17T06:17:01.125000+00:00",
+              "status": "up",
+              "ping_ms": 37
+            },
+            {
+              "timestamp": "2026-06-17T06:18:01.125000+00:00",
+              "status": "up",
+              "ping_ms": 42
+            },
+            {
+              "timestamp": "2026-06-17T06:19:01.125000+00:00",
+              "status": "up",
+              "ping_ms": 55
+            },
+            {
+              "timestamp": "2026-06-17T06:20:01.125000+00:00",
+              "status": "up",
+              "ping_ms": 60
+            },
+            {
+              "timestamp": "2026-06-17T06:21:01.125000+00:00",
+              "status": "up",
+              "ping_ms": 76
+            },
+            {
+              "timestamp": "2026-06-17T06:22:01.126000+00:00",
+              "status": "up",
+              "ping_ms": 79
+            },
+            {
+              "timestamp": "2026-06-17T06:23:01.126000+00:00",
+              "status": "up",
+              "ping_ms": 91
+            },
+            {
+              "timestamp": "2026-06-17T06:24:01.126000+00:00",
+              "status": "up",
+              "ping_ms": 95
+            },
+            {
+              "timestamp": "2026-06-17T06:25:01.127000+00:00",
+              "status": "up",
+              "ping_ms": 42
+            },
+            {
+              "timestamp": "2026-06-17T06:26:01.127000+00:00",
+              "status": "up",
+              "ping_ms": 77
+            },
+            {
+              "timestamp": "2026-06-17T06:27:01.128000+00:00",
+              "status": "up",
+              "ping_ms": 68
+            },
+            {
+              "timestamp": "2026-06-17T06:28:01.128000+00:00",
+              "status": "up",
+              "ping_ms": 79
+            },
+            {
+              "timestamp": "2026-06-17T06:29:01.129000+00:00",
+              "status": "up",
+              "ping_ms": 75
+            },
+            {
+              "timestamp": "2026-06-17T06:30:01.129000+00:00",
+              "status": "up",
+              "ping_ms": 35
+            },
+            {
+              "timestamp": "2026-06-17T06:31:01.129000+00:00",
+              "status": "up",
+              "ping_ms": 72
+            },
+            {
+              "timestamp": "2026-06-17T06:32:01.130000+00:00",
+              "status": "up",
+              "ping_ms": 95
+            },
+            {
+              "timestamp": "2026-06-17T06:33:01.131000+00:00",
+              "status": "up",
+              "ping_ms": 83
+            },
+            {
+              "timestamp": "2026-06-17T06:34:01.131000+00:00",
+              "status": "up",
+              "ping_ms": 71
+            },
+            {
+              "timestamp": "2026-06-17T06:35:01.131000+00:00",
+              "status": "up",
+              "ping_ms": 90
+            },
+            {
+              "timestamp": "2026-06-17T06:36:01.132000+00:00",
+              "status": "up",
+              "ping_ms": 32
+            },
+            {
+              "timestamp": "2026-06-17T06:37:01.133000+00:00",
+              "status": "up",
+              "ping_ms": 47
+            },
+            {
+              "timestamp": "2026-06-17T06:38:01.134000+00:00",
+              "status": "up",
+              "ping_ms": 86
+            },
+            {
+              "timestamp": "2026-06-17T06:39:01.135000+00:00",
+              "status": "up",
+              "ping_ms": 73
+            },
+            {
+              "timestamp": "2026-06-17T06:40:01.136000+00:00",
+              "status": "up",
+              "ping_ms": 75
+            },
+            {
+              "timestamp": "2026-06-17T06:41:01.137000+00:00",
+              "status": "up",
+              "ping_ms": 31
+            },
+            {
+              "timestamp": "2026-06-17T06:42:01.138000+00:00",
+              "status": "up",
+              "ping_ms": 50
+            },
+            {
+              "timestamp": "2026-06-17T06:43:01.139000+00:00",
+              "status": "up",
+              "ping_ms": 67
+            },
+            {
+              "timestamp": "2026-06-17T06:44:01.139000+00:00",
+              "status": "up",
+              "ping_ms": 46
+            },
+            {
+              "timestamp": "2026-06-17T06:45:01.139000+00:00",
+              "status": "up",
+              "ping_ms": 32
+            },
+            {
+              "timestamp": "2026-06-17T06:46:01.140000+00:00",
+              "status": "up",
+              "ping_ms": 92
+            },
+            {
+              "timestamp": "2026-06-17T06:47:01.141000+00:00",
+              "status": "up",
+              "ping_ms": 33
+            },
+            {
+              "timestamp": "2026-06-17T06:48:01.141000+00:00",
+              "status": "up",
+              "ping_ms": 93
+            },
+            {
+              "timestamp": "2026-06-17T06:49:01.141000+00:00",
+              "status": "up",
+              "ping_ms": 34
+            },
+            {
+              "timestamp": "2026-06-17T06:50:01.142000+00:00",
+              "status": "up",
+              "ping_ms": 73
+            },
+            {
+              "timestamp": "2026-06-17T06:51:01.143000+00:00",
+              "status": "up",
+              "ping_ms": 85
+            },
+            {
+              "timestamp": "2026-06-17T06:52:01.145000+00:00",
+              "status": "up",
+              "ping_ms": 88
+            },
+            {
+              "timestamp": "2026-06-17T06:53:01.145000+00:00",
+              "status": "up",
+              "ping_ms": 78
+            },
+            {
+              "timestamp": "2026-06-17T06:54:01.146000+00:00",
+              "status": "up",
+              "ping_ms": 40
+            },
+            {
+              "timestamp": "2026-06-17T06:55:01.149000+00:00",
+              "status": "up",
+              "ping_ms": 54
+            },
+            {
+              "timestamp": "2026-06-17T06:56:01.152000+00:00",
+              "status": "up",
+              "ping_ms": 37
+            },
+            {
+              "timestamp": "2026-06-17T06:57:01.152000+00:00",
+              "status": "up",
+              "ping_ms": 80
+            },
+            {
+              "timestamp": "2026-06-17T06:58:01.152000+00:00",
+              "status": "up",
+              "ping_ms": 36
+            },
+            {
+              "timestamp": "2026-06-17T06:59:01.152000+00:00",
+              "status": "up",
+              "ping_ms": 30
+            },
+            {
+              "timestamp": "2026-06-17T07:00:01.152000+00:00",
+              "status": "up",
+              "ping_ms": 43
+            },
+            {
+              "timestamp": "2026-06-17T07:01:01.153000+00:00",
+              "status": "up",
+              "ping_ms": 33
+            },
+            {
+              "timestamp": "2026-06-17T07:02:01.153000+00:00",
+              "status": "up",
+              "ping_ms": 78
+            },
+            {
+              "timestamp": "2026-06-17T07:03:01.153000+00:00",
+              "status": "up",
+              "ping_ms": 80
+            },
+            {
+              "timestamp": "2026-06-17T07:04:01.153000+00:00",
+              "status": "up",
+              "ping_ms": 91
+            },
+            {
+              "timestamp": "2026-06-17T07:05:01.155000+00:00",
+              "status": "up",
+              "ping_ms": 35
+            },
+            {
+              "timestamp": "2026-06-17T07:06:01.156000+00:00",
+              "status": "up",
+              "ping_ms": 30
+            },
+            {
+              "timestamp": "2026-06-17T07:07:01.157000+00:00",
+              "status": "up",
+              "ping_ms": 55
+            },
+            {
+              "timestamp": "2026-06-17T07:08:01.158000+00:00",
+              "status": "up",
+              "ping_ms": 76
+            },
+            {
+              "timestamp": "2026-06-17T07:09:01.158000+00:00",
+              "status": "up",
+              "ping_ms": 77
+            }
+          ]
+        }
+      ]
     },
     {
       "target_key": "nexum",
       "provider": "uptime-kuma",
       "label": "Statut officiel Nexum",
       "status_url": "https://status.nexum-core.com/status/nexum",
-      "updated_at": "2026-06-17T07:04:45.438004+00:00",
+      "updated_at": "2026-06-17T07:09:38.909355+00:00",
       "services": [
         {
           "key": "nexum-nexum-website",
           "label": "Nexum - Website",
           "status": "up",
-          "ping_ms": 124,
+          "ping_ms": 95,
           "uptime_24h_percent": 99.58,
           "ping_history": [
-            {
-              "timestamp": "2026-06-17T05:25:08.265000+00:00",
-              "status": "up",
-              "ping_ms": 93
-            },
-            {
-              "timestamp": "2026-06-17T05:26:08.265000+00:00",
-              "status": "up",
-              "ping_ms": 107
-            },
-            {
-              "timestamp": "2026-06-17T05:27:08.265000+00:00",
-              "status": "up",
-              "ping_ms": 95
-            },
-            {
-              "timestamp": "2026-06-17T05:28:08.266000+00:00",
-              "status": "up",
-              "ping_ms": 114
-            },
-            {
-              "timestamp": "2026-06-17T05:29:08.266000+00:00",
-              "status": "up",
-              "ping_ms": 101
-            },
             {
               "timestamp": "2026-06-17T05:30:08.266000+00:00",
               "status": "up",
@@ -1962,6 +3465,31 @@
               "timestamp": "2026-06-17T07:04:08.522000+00:00",
               "status": "up",
               "ping_ms": 124
+            },
+            {
+              "timestamp": "2026-06-17T07:05:08.523000+00:00",
+              "status": "up",
+              "ping_ms": 89
+            },
+            {
+              "timestamp": "2026-06-17T07:06:08.523000+00:00",
+              "status": "up",
+              "ping_ms": 204
+            },
+            {
+              "timestamp": "2026-06-17T07:07:08.524000+00:00",
+              "status": "up",
+              "ping_ms": 88
+            },
+            {
+              "timestamp": "2026-06-17T07:08:08.525000+00:00",
+              "status": "up",
+              "ping_ms": 97
+            },
+            {
+              "timestamp": "2026-06-17T07:09:08.525000+00:00",
+              "status": "up",
+              "ping_ms": 95
             }
           ]
         },
@@ -1969,34 +3497,9 @@
           "key": "nexum-nexum-tracker",
           "label": "Nexum - Tracker",
           "status": "up",
-          "ping_ms": 27,
+          "ping_ms": 25,
           "uptime_24h_percent": 99.58,
           "ping_history": [
-            {
-              "timestamp": "2026-06-17T05:25:08.431000+00:00",
-              "status": "up",
-              "ping_ms": 27
-            },
-            {
-              "timestamp": "2026-06-17T05:26:08.432000+00:00",
-              "status": "up",
-              "ping_ms": 22
-            },
-            {
-              "timestamp": "2026-06-17T05:27:08.432000+00:00",
-              "status": "up",
-              "ping_ms": 23
-            },
-            {
-              "timestamp": "2026-06-17T05:28:08.433000+00:00",
-              "status": "up",
-              "ping_ms": 24
-            },
-            {
-              "timestamp": "2026-06-17T05:29:08.434000+00:00",
-              "status": "up",
-              "ping_ms": 22
-            },
             {
               "timestamp": "2026-06-17T05:30:08.434000+00:00",
               "status": "up",
@@ -2471,6 +3974,31 @@
               "timestamp": "2026-06-17T07:04:08.513000+00:00",
               "status": "up",
               "ping_ms": 27
+            },
+            {
+              "timestamp": "2026-06-17T07:05:08.514000+00:00",
+              "status": "up",
+              "ping_ms": 33
+            },
+            {
+              "timestamp": "2026-06-17T07:06:08.515000+00:00",
+              "status": "up",
+              "ping_ms": 24
+            },
+            {
+              "timestamp": "2026-06-17T07:07:08.516000+00:00",
+              "status": "up",
+              "ping_ms": 28
+            },
+            {
+              "timestamp": "2026-06-17T07:08:08.518000+00:00",
+              "status": "up",
+              "ping_ms": 25
+            },
+            {
+              "timestamp": "2026-06-17T07:09:08.519000+00:00",
+              "status": "up",
+              "ping_ms": 25
             }
           ]
         },
@@ -2481,31 +4009,6 @@
           "ping_ms": 27,
           "uptime_24h_percent": 99.93,
           "ping_history": [
-            {
-              "timestamp": "2026-06-17T05:25:09.662000+00:00",
-              "status": "up",
-              "ping_ms": 27
-            },
-            {
-              "timestamp": "2026-06-17T05:26:09.664000+00:00",
-              "status": "up",
-              "ping_ms": 27
-            },
-            {
-              "timestamp": "2026-06-17T05:27:09.665000+00:00",
-              "status": "up",
-              "ping_ms": 27
-            },
-            {
-              "timestamp": "2026-06-17T05:28:09.666000+00:00",
-              "status": "up",
-              "ping_ms": 27
-            },
-            {
-              "timestamp": "2026-06-17T05:29:09.666000+00:00",
-              "status": "up",
-              "ping_ms": 27
-            },
             {
               "timestamp": "2026-06-17T05:30:09.666000+00:00",
               "status": "up",
@@ -2978,6 +4481,31 @@
             },
             {
               "timestamp": "2026-06-17T07:04:09.731000+00:00",
+              "status": "up",
+              "ping_ms": 27
+            },
+            {
+              "timestamp": "2026-06-17T07:05:09.731000+00:00",
+              "status": "up",
+              "ping_ms": 27
+            },
+            {
+              "timestamp": "2026-06-17T07:06:09.731000+00:00",
+              "status": "up",
+              "ping_ms": 27
+            },
+            {
+              "timestamp": "2026-06-17T07:07:09.731000+00:00",
+              "status": "up",
+              "ping_ms": 27
+            },
+            {
+              "timestamp": "2026-06-17T07:08:09.732000+00:00",
+              "status": "up",
+              "ping_ms": 27
+            },
+            {
+              "timestamp": "2026-06-17T07:09:09.732000+00:00",
               "status": "up",
               "ping_ms": 27
             }
