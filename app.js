@@ -9,6 +9,8 @@ const summaryText = document.querySelector("#summary-text");
 const updatedAt = document.querySelector("#updated-at");
 const targetCount = document.querySelector("#target-count");
 const retentionDays = document.querySelector("#retention-days");
+const visitorCountMonth = document.querySelector("#visitor-count-month");
+const visitorCountTotal = document.querySelector("#visitor-count-total");
 const includeUnavailable = document.querySelector("#include-unavailable");
 
 let latestData = null;
@@ -18,6 +20,10 @@ let statusRefreshInFlight = false;
 const refreshIntervalMs = 30000;
 const dataUnavailableError = "La connectivité réseau locale du conteneur est indisponible.";
 const dataUnavailableMessage = "Pour des raisons techniques, le service de monitoring était indisponible.";
+const countApiBase = "https://countapi.mileshilliard.com/api/v1";
+const visitorCounterKey = "saltedbutch-torrent-trackers-visits";
+const visitorCounterDate = new Date();
+const visitorMonthCounterKey = `${visitorCounterKey}-${visitorCounterDate.getFullYear()}-${String(visitorCounterDate.getMonth() + 1).padStart(2, "0")}`;
 
 const targetParents = {
   forum: "torr9"
@@ -43,6 +49,77 @@ function formatDate(value) {
     return "-";
   }
   return formatter.format(date);
+}
+
+function formatInteger(value) {
+  return new Intl.NumberFormat("fr-FR").format(value);
+}
+
+function visitorSessionKey(counterKey) {
+  return `countapi-hit:${counterKey}`;
+}
+
+function hasSessionHit(counterKey) {
+  try {
+    return window.sessionStorage.getItem(visitorSessionKey(counterKey)) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function markSessionHit(counterKey) {
+  try {
+    window.sessionStorage.setItem(visitorSessionKey(counterKey), "1");
+  } catch {
+    // sessionStorage can be disabled; the counter still works without it.
+  }
+}
+
+async function fetchVisitorCount() {
+  const counters = [
+    {
+      element: visitorCountMonth,
+      key: visitorMonthCounterKey,
+      label: "Compteur mensuel public CountAPI"
+    },
+    {
+      element: visitorCountTotal,
+      key: visitorCounterKey,
+      label: "Compteur total public CountAPI"
+    }
+  ].filter((counter) => counter.element);
+
+  if (!counters.length) {
+    return;
+  }
+
+  await Promise.all(counters.map(async (counter) => {
+    const shouldIncrement = !hasSessionHit(counter.key);
+    const endpoint = shouldIncrement ? "hit" : "get";
+
+    try {
+      const response = await fetch(`${countApiBase}/${endpoint}/${counter.key}`, {
+        cache: "no-store",
+        referrerPolicy: "strict-origin-when-cross-origin"
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      const data = await response.json();
+      if (!Number.isFinite(data.value)) {
+        throw new Error("Invalid CountAPI response");
+      }
+      counter.element.textContent = formatInteger(data.value);
+      counter.element.title = counter.label;
+      if (shouldIncrement) {
+        markSessionHit(counter.key);
+      }
+    } catch (error) {
+      console.warn(`[visits] counter unavailable: ${counter.key}`, error);
+      counter.element.textContent = "Indisponible";
+      counter.element.title = "Impossible de joindre CountAPI";
+    }
+  }));
 }
 
 function parseDate(value) {
@@ -1456,6 +1533,7 @@ async function loadStatus() {
 }
 
 loadStatus();
+fetchVisitorCount();
 setInterval(() => {
   if (!document.hidden) {
     loadStatus();
