@@ -2,7 +2,7 @@
   "schema_version": 2,
   "script_version": "2026.05.28.1",
   "site_title": "Trackers status",
-  "updated_at": "2026-07-10T09:15:14.976486+00:00",
+  "updated_at": "2026-07-10T09:19:08.965529+00:00",
   "display_timezone": "Europe/Paris",
   "history_started_at": "2026-05-05T10:00:00+00:00",
   "retention_days": 30,
@@ -23,17 +23,17 @@
       "status": "down",
       "history_started_at": "2026-05-05T10:00:00+00:00",
       "down_since": "2026-04-27T11:54:21.106419+00:00",
-      "current_downtime_seconds": 6384053,
+      "current_downtime_seconds": 6384287,
       "last_error": "La page principale a retourné HTTP 521 for https://forum.torr9.xyz/"
     },
     {
       "key": "c411",
       "label": "C411",
-      "status": "up",
+      "status": "down",
       "history_started_at": "2026-05-05T10:00:00+00:00",
-      "down_since": null,
-      "current_downtime_seconds": null,
-      "last_error": null
+      "down_since": "2026-07-10T09:18:46.877537+00:00",
+      "current_downtime_seconds": 22,
+      "last_error": "La page principale a retourné HTTP 520 for https://c411.org"
     },
     {
       "key": "gemini",
@@ -50,7 +50,7 @@
       "status": "down",
       "history_started_at": "2026-05-05T10:00:00+00:00",
       "down_since": "2026-07-01T10:02:16.756053+00:00",
-      "current_downtime_seconds": 774778,
+      "current_downtime_seconds": 775012,
       "last_error": "La vérification a échoué pendant le chargement ou le contrôle du site."
     }
   ],
@@ -60,7 +60,7 @@
       "label": "Forum Torr9",
       "started_at": "2026-04-27T11:54:21.106419+00:00",
       "ended_at": null,
-      "duration_seconds": 6384053,
+      "duration_seconds": 6384287,
       "last_error": "La page principale a retourné HTTP 521 for https://forum.torr9.xyz/"
     },
     {
@@ -1220,7 +1220,7 @@
       "label": "Nexum",
       "started_at": "2026-07-01T10:02:16.756053+00:00",
       "ended_at": null,
-      "duration_seconds": 774778,
+      "duration_seconds": 775012,
       "last_error": "La vérification a échoué pendant le chargement ou le contrôle du site."
     },
     {
@@ -1694,6 +1694,14 @@
       "ended_at": "2026-07-10T08:53:54.420898+00:00",
       "duration_seconds": 514,
       "last_error": "La page principale a retourné HTTP 520 for https://c411.org"
+    },
+    {
+      "target_key": "c411",
+      "label": "C411",
+      "started_at": "2026-07-10T09:18:46.877537+00:00",
+      "ended_at": null,
+      "duration_seconds": 22,
+      "last_error": "La page principale a retourné HTTP 520 for https://c411.org"
     }
   ],
   "external_status": [
@@ -1702,35 +1710,15 @@
       "provider": "uptime-kuma",
       "label": "Statut officiel Gemini",
       "status_url": "https://status.gemini-tracker.org/status/gemini",
-      "updated_at": "2026-07-10T09:15:14.976486+00:00",
+      "updated_at": "2026-07-10T09:19:08.965529+00:00",
       "services": [
         {
           "key": "gemini-gemini-tracker-site",
           "label": "Gemini-Tracker Site",
           "status": "up",
-          "ping_ms": 324,
+          "ping_ms": 294,
           "uptime_24h_percent": 99.93,
           "ping_history": [
-            {
-              "timestamp": "2026-07-10T07:35:33.102000+00:00",
-              "status": "up",
-              "ping_ms": 298
-            },
-            {
-              "timestamp": "2026-07-10T07:36:33.102000+00:00",
-              "status": "up",
-              "ping_ms": 343
-            },
-            {
-              "timestamp": "2026-07-10T07:37:33.103000+00:00",
-              "status": "up",
-              "ping_ms": 373
-            },
-            {
-              "timestamp": "2026-07-10T07:38:33.103000+00:00",
-              "status": "up",
-              "ping_ms": 277
-            },
             {
               "timestamp": "2026-07-10T07:39:33.103000+00:00",
               "status": "up",
@@ -2210,6 +2198,26 @@
               "timestamp": "2026-07-10T09:14:33.162000+00:00",
               "status": "up",
               "ping_ms": 324
+            },
+            {
+              "timestamp": "2026-07-10T09:15:33.162000+00:00",
+              "status": "up",
+              "ping_ms": 293
+            },
+            {
+              "timestamp": "2026-07-10T09:16:33.162000+00:00",
+              "status": "up",
+              "ping_ms": 372
+            },
+            {
+              "timestamp": "2026-07-10T09:17:33.163000+00:00",
+              "status": "up",
+              "ping_ms": 365
+            },
+            {
+              "timestamp": "2026-07-10T09:18:33.163000+00:00",
+              "status": "up",
+              "ping_ms": 294
             }
           ]
         },
@@ -2217,29 +2225,9 @@
           "key": "gemini-gemini-tracker-tracker",
           "label": "Gemini-Tracker Tracker",
           "status": "up",
-          "ping_ms": 7,
+          "ping_ms": 4,
           "uptime_24h_percent": 100.0,
           "ping_history": [
-            {
-              "timestamp": "2026-07-10T07:35:33.218000+00:00",
-              "status": "up",
-              "ping_ms": 6
-            },
-            {
-              "timestamp": "2026-07-10T07:36:33.218000+00:00",
-              "status": "up",
-              "ping_ms": 4
-            },
-            {
-              "timestamp": "2026-07-10T07:37:33.218000+00:00",
-              "status": "up",
-              "ping_ms": 7
-            },
-            {
-              "timestamp": "2026-07-10T07:38:33.218000+00:00",
-              "status": "up",
-              "ping_ms": 2
-            },
             {
               "timestamp": "2026-07-10T07:39:33.219000+00:00",
               "status": "up",
@@ -2719,6 +2707,26 @@
               "timestamp": "2026-07-10T09:14:33.277000+00:00",
               "status": "up",
               "ping_ms": 7
+            },
+            {
+              "timestamp": "2026-07-10T09:15:33.277000+00:00",
+              "status": "up",
+              "ping_ms": 2
+            },
+            {
+              "timestamp": "2026-07-10T09:16:33.277000+00:00",
+              "status": "up",
+              "ping_ms": 2
+            },
+            {
+              "timestamp": "2026-07-10T09:17:33.278000+00:00",
+              "status": "up",
+              "ping_ms": 6
+            },
+            {
+              "timestamp": "2026-07-10T09:18:33.280000+00:00",
+              "status": "up",
+              "ping_ms": 4
             }
           ]
         },
@@ -2726,29 +2734,9 @@
           "key": "gemini-gemini-tracker-api",
           "label": "Gemini-Tracker API",
           "status": "up",
-          "ping_ms": 58,
+          "ping_ms": 67,
           "uptime_24h_percent": 100.0,
           "ping_history": [
-            {
-              "timestamp": "2026-07-10T07:35:33.218000+00:00",
-              "status": "up",
-              "ping_ms": 70
-            },
-            {
-              "timestamp": "2026-07-10T07:36:33.219000+00:00",
-              "status": "up",
-              "ping_ms": 80
-            },
-            {
-              "timestamp": "2026-07-10T07:37:33.220000+00:00",
-              "status": "up",
-              "ping_ms": 77
-            },
-            {
-              "timestamp": "2026-07-10T07:38:33.219000+00:00",
-              "status": "up",
-              "ping_ms": 37
-            },
             {
               "timestamp": "2026-07-10T07:39:33.219000+00:00",
               "status": "up",
@@ -3228,6 +3216,26 @@
               "timestamp": "2026-07-10T09:14:33.279000+00:00",
               "status": "up",
               "ping_ms": 58
+            },
+            {
+              "timestamp": "2026-07-10T09:15:33.279000+00:00",
+              "status": "up",
+              "ping_ms": 32
+            },
+            {
+              "timestamp": "2026-07-10T09:16:33.279000+00:00",
+              "status": "up",
+              "ping_ms": 47
+            },
+            {
+              "timestamp": "2026-07-10T09:17:33.278000+00:00",
+              "status": "up",
+              "ping_ms": 79
+            },
+            {
+              "timestamp": "2026-07-10T09:18:33.278000+00:00",
+              "status": "up",
+              "ping_ms": 67
             }
           ]
         }
@@ -3238,7 +3246,7 @@
       "provider": "official",
       "label": "Statut officiel Nexum",
       "status_url": "https://status.nexum-core.com/status/nexum",
-      "updated_at": "2026-07-10T09:15:14.976486+00:00",
+      "updated_at": "2026-07-10T09:19:08.965529+00:00",
       "services": []
     }
   ]
