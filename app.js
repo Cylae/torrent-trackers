@@ -2,7 +2,7 @@ const tabs = Array.from(document.querySelectorAll(".tab"));
 const panels = {
   "24h": document.querySelector("#view-24h"),
   "7d": document.querySelector("#view-7d"),
-  "30d": document.querySelector("#view-30d")
+  "30d": document.querySelector("#view-30d"),
 };
 const summary = document.querySelector("#summary");
 const summaryText = document.querySelector("#summary-text");
@@ -18,26 +18,28 @@ let includeUnavailableData = true;
 let statusRefreshInFlight = false;
 
 const refreshIntervalMs = 30000;
-const dataUnavailableError = "La connectivité réseau locale du conteneur est indisponible.";
-const dataUnavailableMessage = "Pour des raisons techniques, le service de monitoring était indisponible.";
+const dataUnavailableError =
+  "La connectivité réseau locale du conteneur est indisponible.";
+const dataUnavailableMessage =
+  "Pour des raisons techniques, le service de monitoring était indisponible.";
 const countApiBase = "https://countapi.mileshilliard.com/api/v1";
 const visitorCounterKey = "saltedbutch-torrent-trackers-visits";
 const visitorCounterDate = new Date();
 const visitorMonthCounterKey = `${visitorCounterKey}-${visitorCounterDate.getFullYear()}-${String(visitorCounterDate.getMonth() + 1).padStart(2, "0")}`;
 
 const targetParents = {
-  forum: "torr9"
+  forum: "torr9",
 };
 
 const formatter = new Intl.DateTimeFormat("fr-FR", {
   dateStyle: "medium",
-  timeStyle: "medium"
+  timeStyle: "medium",
 });
 
 const timeFormatter = new Intl.DateTimeFormat("fr-FR", {
   hour: "2-digit",
   minute: "2-digit",
-  hour12: false
+  hour12: false,
 });
 
 function formatDate(value) {
@@ -80,46 +82,51 @@ async function fetchVisitorCount() {
     {
       element: visitorCountMonth,
       key: visitorMonthCounterKey,
-      label: "Compteur mensuel public CountAPI"
+      label: "Compteur mensuel public CountAPI",
     },
     {
       element: visitorCountTotal,
       key: visitorCounterKey,
-      label: "Compteur total public CountAPI"
-    }
+      label: "Compteur total public CountAPI",
+    },
   ].filter((counter) => counter.element);
 
   if (!counters.length) {
     return;
   }
 
-  await Promise.all(counters.map(async (counter) => {
-    const shouldIncrement = !hasSessionHit(counter.key);
-    const endpoint = shouldIncrement ? "hit" : "get";
+  await Promise.all(
+    counters.map(async (counter) => {
+      const shouldIncrement = !hasSessionHit(counter.key);
+      const endpoint = shouldIncrement ? "hit" : "get";
 
-    try {
-      const response = await fetch(`${countApiBase}/${endpoint}/${counter.key}`, {
-        cache: "no-store",
-        referrerPolicy: "strict-origin-when-cross-origin"
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
+      try {
+        const response = await fetch(
+          `${countApiBase}/${endpoint}/${counter.key}`,
+          {
+            cache: "no-store",
+            referrerPolicy: "strict-origin-when-cross-origin",
+          },
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        const data = await response.json();
+        if (!Number.isFinite(data.value)) {
+          throw new Error("Invalid CountAPI response");
+        }
+        counter.element.textContent = formatInteger(data.value);
+        counter.element.title = counter.label;
+        if (shouldIncrement) {
+          markSessionHit(counter.key);
+        }
+      } catch (error) {
+        console.warn(`[visits] counter unavailable: ${counter.key}`, error);
+        counter.element.textContent = "Indisponible";
+        counter.element.title = "Impossible de joindre CountAPI";
       }
-      const data = await response.json();
-      if (!Number.isFinite(data.value)) {
-        throw new Error("Invalid CountAPI response");
-      }
-      counter.element.textContent = formatInteger(data.value);
-      counter.element.title = counter.label;
-      if (shouldIncrement) {
-        markSessionHit(counter.key);
-      }
-    } catch (error) {
-      console.warn(`[visits] counter unavailable: ${counter.key}`, error);
-      counter.element.textContent = "Indisponible";
-      counter.element.title = "Impossible de joindre CountAPI";
-    }
-  }));
+    }),
+  );
 }
 
 function parseDate(value) {
@@ -131,7 +138,9 @@ function parseDate(value) {
 }
 
 function targetHistoryStart(target, data) {
-  return parseDate(target.history_started_at) || parseDate(data.history_started_at);
+  return (
+    parseDate(target.history_started_at) || parseDate(data.history_started_at)
+  );
 }
 
 function formatDuration(seconds) {
@@ -231,7 +240,9 @@ function externalStatus(entry) {
 }
 
 function externalStatusesForTarget(data, targetKey) {
-  const statuses = Array.isArray(data.external_status) ? data.external_status : [];
+  const statuses = Array.isArray(data.external_status)
+    ? data.external_status
+    : [];
   return statuses.filter((entry) => entry.target_key === targetKey);
 }
 
@@ -291,12 +302,14 @@ function officialSiteLabel(entry, target) {
 }
 
 function pingHistoryPoints(service) {
-  const history = Array.isArray(service.ping_history) ? service.ping_history : [];
+  const history = Array.isArray(service.ping_history)
+    ? service.ping_history
+    : [];
   return history
     .map((point) => ({
       timestamp: parseDate(point.timestamp),
       status: point.status,
-      pingMs: Number.isFinite(point.ping_ms) ? point.ping_ms : null
+      pingMs: Number.isFinite(point.ping_ms) ? point.ping_ms : null,
     }))
     .filter((point) => point.timestamp)
     .sort((a, b) => a.timestamp - b.timestamp);
@@ -307,7 +320,10 @@ function percentile(values, ratio) {
     return 0;
   }
   const sorted = [...values].sort((a, b) => a - b);
-  const index = Math.min(sorted.length - 1, Math.max(0, Math.ceil(sorted.length * ratio) - 1));
+  const index = Math.min(
+    sorted.length - 1,
+    Math.max(0, Math.ceil(sorted.length * ratio) - 1),
+  );
   return sorted[index];
 }
 
@@ -332,10 +348,16 @@ function buildPingSparkline(service) {
   const maxTime = points[points.length - 1].timestamp.getTime();
   const timeRange = Math.max(1, maxTime - minTime);
   const p95 = percentile(validPings, 0.95);
-  const maxPing = Math.max(100, Math.min(Math.max(...validPings), Math.max(p95 * 1.35, 300)));
+  const maxPing = Math.max(
+    100,
+    Math.min(Math.max(...validPings), Math.max(p95 * 1.35, 300)),
+  );
 
   function xFor(point) {
-    return padX + ((point.timestamp.getTime() - minTime) / timeRange) * (width - padX * 2);
+    return (
+      padX +
+      ((point.timestamp.getTime() - minTime) / timeRange) * (width - padX * 2)
+    );
   }
 
   function yFor(pingMs) {
@@ -356,7 +378,7 @@ function buildPingSparkline(service) {
     current.push({
       x: xFor(point),
       y: yFor(point.pingMs),
-      pingMs: point.pingMs
+      pingMs: point.pingMs,
     });
   }
   if (current.length > 1) {
@@ -373,7 +395,9 @@ function buildPingSparkline(service) {
   label.textContent = "Ping history";
 
   const stats = document.createElement("strong");
-  const avg = Math.round(validPings.reduce((sum, value) => sum + value, 0) / validPings.length);
+  const avg = Math.round(
+    validPings.reduce((sum, value) => sum + value, 0) / validPings.length,
+  );
   const latest = validPings.at(-1);
   stats.textContent = `avg ${avg} ms · last ${latest} ms`;
   head.append(label, stats);
@@ -382,16 +406,25 @@ function buildPingSparkline(service) {
   svg.setAttribute("class", "ping-sparkline");
   svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
   svg.setAttribute("role", "img");
-  svg.setAttribute("aria-label", `Historique ping ${service.label || service.key || "service"}`);
+  svg.setAttribute(
+    "aria-label",
+    `Historique ping ${service.label || service.key || "service"}`,
+  );
 
-  const guide100 = document.createElementNS("http://www.w3.org/2000/svg", "line");
+  const guide100 = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "line",
+  );
   guide100.setAttribute("class", "ping-guide ping-guide-good");
   guide100.setAttribute("x1", String(padX));
   guide100.setAttribute("x2", String(width - padX));
   guide100.setAttribute("y1", yFor(100).toFixed(1));
   guide100.setAttribute("y2", yFor(100).toFixed(1));
 
-  const guide300 = document.createElementNS("http://www.w3.org/2000/svg", "line");
+  const guide300 = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "line",
+  );
   guide300.setAttribute("class", "ping-guide ping-guide-warn");
   guide300.setAttribute("x1", String(padX));
   guide300.setAttribute("x2", String(width - padX));
@@ -404,7 +437,10 @@ function buildPingSparkline(service) {
     for (let index = 1; index < segment.length; index += 1) {
       const previous = segment[index - 1];
       const currentPoint = segment[index];
-      const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      const line = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "line",
+      );
       const segmentPing = Math.max(previous.pingMs, currentPoint.pingMs);
       line.setAttribute("class", `ping-line ${pingClass(segmentPing)}`);
       line.setAttribute("x1", previous.x.toFixed(1));
@@ -419,12 +455,18 @@ function buildPingSparkline(service) {
     if (!Number.isFinite(point.pingMs)) {
       continue;
     }
-    const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    const dot = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "circle",
+    );
     dot.setAttribute("class", `ping-point ${pingClass(point.pingMs)}`);
     dot.setAttribute("cx", xFor(point).toFixed(1));
     dot.setAttribute("cy", yFor(point.pingMs).toFixed(1));
     dot.setAttribute("r", point.pingMs > maxPing ? "2.9" : "2.2");
-    const title = document.createElementNS("http://www.w3.org/2000/svg", "title");
+    const title = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "title",
+    );
     title.textContent = `${formatDate(point.timestamp)} · ${point.pingMs} ms`;
     dot.append(title);
     svg.append(dot);
@@ -456,13 +498,19 @@ function directChildrenStatus(target, includeExternal = true) {
   }
   const childStatuses = [
     ...children.map((child) => aggregateStatus(child, includeExternal)),
-    ...externalStatuses
+    ...externalStatuses,
   ];
   const currentStatus = targetStatus(target);
-  if (currentStatus === "unknown" && childStatuses.every((status) => status === "unknown")) {
+  if (
+    currentStatus === "unknown" &&
+    childStatuses.every((status) => status === "unknown")
+  ) {
     return "unknown";
   }
-  if (currentStatus === "down" && childStatuses.every((status) => status === "down")) {
+  if (
+    currentStatus === "down" &&
+    childStatuses.every((status) => status === "down")
+  ) {
     return "down";
   }
   if (childStatuses.some((status) => status !== "up")) {
@@ -477,9 +525,14 @@ function aggregateStatus(target, includeExternal = true) {
     return currentStatus;
   }
   const children = Array.isArray(target.children) ? target.children : [];
-  const hasChildIssue = children.some((child) => aggregateStatus(child, includeExternal) !== "up");
-  const hasExternalIssue = includeExternal
-    && (target.external_status || []).some((entry) => externalStatus(entry) !== "up");
+  const hasChildIssue = children.some(
+    (child) => aggregateStatus(child, includeExternal) !== "up",
+  );
+  const hasExternalIssue =
+    includeExternal &&
+    (target.external_status || []).some(
+      (entry) => externalStatus(entry) !== "up",
+    );
   return hasChildIssue || hasExternalIssue ? "degraded" : "up";
 }
 
@@ -492,7 +545,7 @@ function getTargetTree(data) {
     byKey.set(target.key, {
       ...target,
       children: [],
-      external_status: externalStatusesForTarget(data, target.key)
+      external_status: externalStatusesForTarget(data, target.key),
     });
   }
 
@@ -511,13 +564,20 @@ function getTargetTree(data) {
 }
 
 function flattenTargets(targets) {
-  return targets.flatMap((target) => [target, ...flattenTargets(target.children || [])]);
+  return targets.flatMap((target) => [
+    target,
+    ...flattenTargets(target.children || []),
+  ]);
 }
 
 function incidentIntervals(data, targetKey, windowStart, windowEnd) {
   const incidents = Array.isArray(data.incidents) ? data.incidents : [];
   return incidents
-    .filter((incident) => incident.target_key === targetKey && !isDataUnavailableError(incident.last_error))
+    .filter(
+      (incident) =>
+        incident.target_key === targetKey &&
+        !isDataUnavailableError(incident.last_error),
+    )
     .map((incident) => {
       const startedAt = parseDate(incident.started_at);
       const endedAt = parseDate(incident.ended_at) || windowEnd;
@@ -527,7 +587,7 @@ function incidentIntervals(data, targetKey, windowStart, windowEnd) {
       return {
         ...incident,
         start: new Date(Math.max(startedAt.getTime(), windowStart.getTime())),
-        end: new Date(Math.min(endedAt.getTime(), windowEnd.getTime()))
+        end: new Date(Math.min(endedAt.getTime(), windowEnd.getTime())),
       };
     })
     .filter(Boolean)
@@ -548,7 +608,7 @@ function dataUnavailableIntervals(data, windowStart, windowEnd) {
         ...incident,
         label: "Données indisponibles",
         start: new Date(Math.max(startedAt.getTime(), windowStart.getTime())),
-        end: new Date(Math.min(endedAt.getTime(), windowEnd.getTime()))
+        end: new Date(Math.min(endedAt.getTime(), windowEnd.getTime())),
       };
     })
     .filter(Boolean)
@@ -562,10 +622,12 @@ function mergeIntervals(intervals) {
   for (const interval of intervals) {
     const previous = merged[merged.length - 1];
     if (previous && interval.start <= previous.end) {
-      previous.end = new Date(Math.max(previous.end.getTime(), interval.end.getTime()));
+      previous.end = new Date(
+        Math.max(previous.end.getTime(), interval.end.getTime()),
+      );
       previous.duration_seconds = Math.max(
         0,
-        (previous.end.getTime() - previous.start.getTime()) / 1000
+        (previous.end.getTime() - previous.start.getTime()) / 1000,
       );
     } else {
       merged.push({ ...interval });
@@ -584,13 +646,21 @@ function overlapSeconds(intervals, start, end) {
 
 function overlapExcludingSeconds(intervals, excludedIntervals, start, end) {
   return intervals.reduce((total, interval) => {
-    const overlapStart = new Date(Math.max(start.getTime(), interval.start.getTime()));
-    const overlapEnd = new Date(Math.min(end.getTime(), interval.end.getTime()));
+    const overlapStart = new Date(
+      Math.max(start.getTime(), interval.start.getTime()),
+    );
+    const overlapEnd = new Date(
+      Math.min(end.getTime(), interval.end.getTime()),
+    );
     if (overlapEnd <= overlapStart) {
       return total;
     }
     const seconds = (overlapEnd.getTime() - overlapStart.getTime()) / 1000;
-    const excludedSeconds = overlapSeconds(excludedIntervals, overlapStart, overlapEnd);
+    const excludedSeconds = overlapSeconds(
+      excludedIntervals,
+      overlapStart,
+      overlapEnd,
+    );
     return total + Math.max(0, seconds - excludedSeconds);
   }, 0);
 }
@@ -660,7 +730,9 @@ function buildStatusDetail(target) {
 }
 
 function buildExternalStatusPanel(target) {
-  const entries = Array.isArray(target.external_status) ? target.external_status : [];
+  const entries = Array.isArray(target.external_status)
+    ? target.external_status
+    : [];
   if (!entries.length) {
     return null;
   }
@@ -745,7 +817,9 @@ function buildExternalStatusPanel(target) {
             legend.hidden = collapsed;
           }
           toggle.setAttribute("aria-expanded", String(!collapsed));
-          toggle.textContent = collapsed ? "Afficher les graphes" : "Masquer les graphes";
+          toggle.textContent = collapsed
+            ? "Afficher les graphes"
+            : "Masquer les graphes";
         });
         panel.append(toggle);
       }
@@ -800,10 +874,17 @@ function buildTimelineLegend() {
 }
 
 function buildTimeline(target, data, windowStart, windowEnd, slotSeconds) {
-  const intervals = incidentIntervals(data, target.key, windowStart, windowEnd)
-    .map((interval, index) => ({ ...interval, periodId: `down-${index}` }));
-  const unavailableIntervals = dataUnavailableIntervals(data, windowStart, windowEnd)
-    .map((interval, index) => ({ ...interval, periodId: `unknown-${index}` }));
+  const intervals = incidentIntervals(
+    data,
+    target.key,
+    windowStart,
+    windowEnd,
+  ).map((interval, index) => ({ ...interval, periodId: `down-${index}` }));
+  const unavailableIntervals = dataUnavailableIntervals(
+    data,
+    windowStart,
+    windowEnd,
+  ).map((interval, index) => ({ ...interval, periodId: `unknown-${index}` }));
   const timeline = document.createElement("div");
   timeline.className = "timeline";
   timeline.setAttribute("aria-label", `Disponibilité 24h ${target.label}`);
@@ -813,7 +894,11 @@ function buildTimeline(target, data, windowStart, windowEnd, slotSeconds) {
     const end = new Date(start.getTime() + slotSeconds * 1000);
     const downSeconds = overlapSeconds(intervals, start, end);
     const unavailableSeconds = overlapSeconds(unavailableIntervals, start, end);
-    const slotUnavailableIntervals = overlappingIntervals(unavailableIntervals, start, end);
+    const slotUnavailableIntervals = overlappingIntervals(
+      unavailableIntervals,
+      start,
+      end,
+    );
     const slotIncidentIntervals = overlappingIntervals(intervals, start, end);
     const highlightedIntervals = slotUnavailableIntervals.length
       ? slotUnavailableIntervals
@@ -834,14 +919,15 @@ function buildTimeline(target, data, windowStart, windowEnd, slotSeconds) {
 
     const slotLabel = `${formatDate(start)} -> ${formatDate(end)}`;
     if (downSeconds > 0 || unavailableSeconds > 0) {
-      const tooltip = unavailableSeconds > 0
-        ? createUnavailableTooltip(
-          start,
-          end,
-          unavailableSeconds,
-          slotUnavailableIntervals
-        )
-        : createTooltip(slotIncidentIntervals);
+      const tooltip =
+        unavailableSeconds > 0
+          ? createUnavailableTooltip(
+              start,
+              end,
+              unavailableSeconds,
+              slotUnavailableIntervals,
+            )
+          : createTooltip(slotIncidentIntervals);
       slot.setAttribute("tabindex", "0");
       slot.dataset.periodIds = periodIds.join(" ");
       slot.addEventListener("mouseenter", () => {
@@ -891,7 +977,14 @@ function clearTimelineHighlights(timeline) {
   }
 }
 
-function buildTimelineEntry(target, data, windowStart, windowEnd, slotSeconds, isChild = false) {
+function buildTimelineEntry(
+  target,
+  data,
+  windowStart,
+  windowEnd,
+  slotSeconds,
+  isChild = false,
+) {
   const entry = document.createElement("div");
   entry.className = `timeline-entry${isChild ? " is-child" : ""}`;
   if (isChild) {
@@ -899,12 +992,19 @@ function buildTimelineEntry(target, data, windowStart, windowEnd, slotSeconds, i
   }
   entry.append(
     buildTimeline(target, data, windowStart, windowEnd, slotSeconds),
-    buildStatusDetail(target)
+    buildStatusDetail(target),
   );
   return entry;
 }
 
-function appendTimelineChildren(container, target, data, windowStart, windowEnd, slotSeconds) {
+function appendTimelineChildren(
+  container,
+  target,
+  data,
+  windowStart,
+  windowEnd,
+  slotSeconds,
+) {
   const children = Array.isArray(target.children) ? target.children : [];
   if (!children.length) {
     return;
@@ -913,8 +1013,24 @@ function appendTimelineChildren(container, target, data, windowStart, windowEnd,
   const list = document.createElement("div");
   list.className = "subtarget-list";
   for (const child of children) {
-    list.append(buildTimelineEntry(child, data, windowStart, windowEnd, slotSeconds, true));
-    appendTimelineChildren(list, child, data, windowStart, windowEnd, slotSeconds);
+    list.append(
+      buildTimelineEntry(
+        child,
+        data,
+        windowStart,
+        windowEnd,
+        slotSeconds,
+        true,
+      ),
+    );
+    appendTimelineChildren(
+      list,
+      child,
+      data,
+      windowStart,
+      windowEnd,
+      slotSeconds,
+    );
   }
   container.append(list);
 }
@@ -934,9 +1050,16 @@ function render24h(data) {
     card.className = `timeline-card ${statusClass(status)}`;
     card.append(
       buildHead(target),
-      buildTimelineEntry(target, data, windowStart, windowEnd, slotSeconds)
+      buildTimelineEntry(target, data, windowStart, windowEnd, slotSeconds),
     );
-    appendTimelineChildren(card, target, data, windowStart, windowEnd, slotSeconds);
+    appendTimelineChildren(
+      card,
+      target,
+      data,
+      windowStart,
+      windowEnd,
+      slotSeconds,
+    );
     const externalPanel = buildExternalStatusPanel(target);
     if (externalPanel) {
       card.append(externalPanel);
@@ -946,7 +1069,10 @@ function render24h(data) {
 
   const timelineHeader = document.createElement("div");
   timelineHeader.className = "timeline-header";
-  timelineHeader.append(buildTimelineLegend(), buildTimelineScale(windowStart, slotSeconds));
+  timelineHeader.append(
+    buildTimelineLegend(),
+    buildTimelineScale(windowStart, slotSeconds),
+  );
 
   panels["24h"].replaceChildren(timelineHeader, list);
 }
@@ -957,7 +1083,9 @@ function createTooltip(intervals) {
   tooltip.hidden = true;
 
   const title = document.createElement("strong");
-  title.textContent = intervals.length ? "Incidents détectés" : "Aucun incident";
+  title.textContent = intervals.length
+    ? "Incidents détectés"
+    : "Aucun incident";
   tooltip.append(title);
 
   if (!intervals.length) {
@@ -966,7 +1094,8 @@ function createTooltip(intervals) {
 
   const list = document.createElement("ul");
   for (const interval of intervals) {
-    const duration = formatDuration((interval.end - interval.start) / 1000) || "-";
+    const duration =
+      formatDuration((interval.end - interval.start) / 1000) || "-";
     const item = document.createElement("li");
     item.textContent = `${formatDate(interval.start)} -> ${formatDate(interval.end)} (${duration})`;
     if (interval.last_error) {
@@ -1022,7 +1151,10 @@ function createUnavailableTooltip(start, end, seconds, intervals = []) {
     const list = document.createElement("ul");
     for (const interval of intervals) {
       const item = document.createElement("li");
-      const duration = Math.max(0, (interval.end.getTime() - interval.start.getTime()) / 1000);
+      const duration = Math.max(
+        0,
+        (interval.end.getTime() - interval.start.getTime()) / 1000,
+      );
       item.textContent = `${formatDate(interval.start)} -> ${formatDate(interval.end)} (${formatDuration(duration) || "0m"})`;
       list.append(item);
     }
@@ -1052,7 +1184,7 @@ function summaryForMode(metrics, days, mode, compact = false) {
       value: percent(metrics.downPct),
       detail: compact
         ? `${downText} down${unavailableSuffix} sur ${periodText}`
-        : `${downText} de downtime${unavailableSuffix} sur ${periodText}.`
+        : `${downText} de downtime${unavailableSuffix} sur ${periodText}.`,
     };
   }
 
@@ -1061,7 +1193,7 @@ function summaryForMode(metrics, days, mode, compact = false) {
       value: percent(metrics.unknownPct),
       detail: compact
         ? `${unavailableText} sans données sur ${periodText}`
-        : `${unavailableText} sans données sur ${periodText}.`
+        : `${unavailableText} sans données sur ${periodText}.`,
     };
   }
 
@@ -1069,7 +1201,7 @@ function summaryForMode(metrics, days, mode, compact = false) {
     value: percent(metrics.upPct),
     detail: compact
       ? `${upText} up${unavailableSuffix} sur ${periodText}`
-      : `${upText} d’uptime${unavailableSuffix} sur ${periodText}.`
+      : `${upText} d’uptime${unavailableSuffix} sur ${periodText}.`,
   };
 }
 
@@ -1099,8 +1231,9 @@ function bindPieSegmentSelection(segments, setSummary) {
     });
   }
 
-  const initialSegment = segments.find((segment) => segment.mode === "up" && segment.enabled)
-    || segments.find((segment) => segment.enabled);
+  const initialSegment =
+    segments.find((segment) => segment.mode === "up" && segment.enabled) ||
+    segments.find((segment) => segment.enabled);
   if (initialSegment) {
     select(initialSegment);
   }
@@ -1108,51 +1241,72 @@ function bindPieSegmentSelection(segments, setSummary) {
 
 function uptimeMetrics(target, data, now, windowStart, windowSeconds) {
   const historyStart = targetHistoryStart(target, data);
-  const knownStart = historyStart && historyStart > windowStart ? historyStart : windowStart;
+  const knownStart =
+    historyStart && historyStart > windowStart ? historyStart : windowStart;
   const unknownEnd = new Date(Math.min(knownStart.getTime(), now.getTime()));
   const rawUnknownSeconds = Math.min(
     windowSeconds,
-    Math.max(0, (unknownEnd.getTime() - windowStart.getTime()) / 1000)
+    Math.max(0, (unknownEnd.getTime() - windowStart.getTime()) / 1000),
   );
-  const prehistoryIntervals = rawUnknownSeconds > 0
-    ? incidentIntervals(data, target.key, windowStart, unknownEnd)
-    : [];
+  const prehistoryIntervals =
+    rawUnknownSeconds > 0
+      ? incidentIntervals(data, target.key, windowStart, unknownEnd)
+      : [];
   const knownPrehistoryDownSeconds = Math.min(
     rawUnknownSeconds,
-    overlapSeconds(prehistoryIntervals, windowStart, unknownEnd)
+    overlapSeconds(prehistoryIntervals, windowStart, unknownEnd),
   );
-  const prehistoryUnavailableSeconds = Math.max(0, rawUnknownSeconds - knownPrehistoryDownSeconds);
-  const prehistoryUnavailableIntervals = prehistoryUnavailableSeconds > 0
-    ? [{
-      label: "Données indisponibles",
-      start: windowStart,
-      end: unknownEnd,
-      duration_seconds: prehistoryUnavailableSeconds
-    }]
-    : [];
+  const prehistoryUnavailableSeconds = Math.max(
+    0,
+    rawUnknownSeconds - knownPrehistoryDownSeconds,
+  );
+  const prehistoryUnavailableIntervals =
+    prehistoryUnavailableSeconds > 0
+      ? [
+          {
+            label: "Données indisponibles",
+            start: windowStart,
+            end: unknownEnd,
+            duration_seconds: prehistoryUnavailableSeconds,
+          },
+        ]
+      : [];
   const unavailableIntervals = mergeIntervals([
     ...prehistoryUnavailableIntervals,
-    ...dataUnavailableIntervals(data, windowStart, now)
+    ...dataUnavailableIntervals(data, windowStart, now),
   ]);
   const unavailableSeconds = Math.min(
     windowSeconds,
-    overlapSeconds(unavailableIntervals, windowStart, now)
+    overlapSeconds(unavailableIntervals, windowStart, now),
   );
   const unknownSeconds = includeUnavailableData ? unavailableSeconds : 0;
   const knownSeconds = Math.max(0, windowSeconds - unavailableSeconds);
   const measuredStart = includeUnavailableData ? knownStart : windowStart;
   const intervals = incidentIntervals(data, target.key, measuredStart, now);
   const excludedIntervals = includeUnavailableData ? unavailableIntervals : [];
-  const measuredDownSeconds = overlapExcludingSeconds(intervals, excludedIntervals, measuredStart, now);
+  const measuredDownSeconds = overlapExcludingSeconds(
+    intervals,
+    excludedIntervals,
+    measuredStart,
+    now,
+  );
   const downSeconds = Math.min(
     knownSeconds,
-    (includeUnavailableData ? knownPrehistoryDownSeconds : 0) + measuredDownSeconds
+    (includeUnavailableData ? knownPrehistoryDownSeconds : 0) +
+      measuredDownSeconds,
   );
-  const denominatorSeconds = includeUnavailableData ? windowSeconds : Math.max(knownSeconds, 1);
-  const downPct = denominatorSeconds > 0 ? (downSeconds / denominatorSeconds) * 100 : 0;
-  const unknownPct = includeUnavailableData && windowSeconds > 0 ? (unknownSeconds / windowSeconds) * 100 : 0;
+  const denominatorSeconds = includeUnavailableData
+    ? windowSeconds
+    : Math.max(knownSeconds, 1);
+  const downPct =
+    denominatorSeconds > 0 ? (downSeconds / denominatorSeconds) * 100 : 0;
+  const unknownPct =
+    includeUnavailableData && windowSeconds > 0
+      ? (unknownSeconds / windowSeconds) * 100
+      : 0;
   const upSeconds = Math.max(0, knownSeconds - downSeconds);
-  const upPct = denominatorSeconds > 0 ? (upSeconds / denominatorSeconds) * 100 : 0;
+  const upPct =
+    denominatorSeconds > 0 ? (upSeconds / denominatorSeconds) * 100 : 0;
   const firstUnavailable = unavailableIntervals[0];
   const lastUnavailable = unavailableIntervals[unavailableIntervals.length - 1];
   return {
@@ -1167,19 +1321,29 @@ function uptimeMetrics(target, data, now, windowStart, windowSeconds) {
     unknownStart: firstUnavailable ? firstUnavailable.start : windowStart,
     unknownPct,
     upSeconds,
-    upPct
+    upPct,
   };
 }
 
-function buildUptimeSubtargetEntry(target, data, days, now, windowStart, windowSeconds) {
-  const metrics = uptimeMetrics(
-    target,
-    data,
-    now,
-    windowStart,
-    windowSeconds
-  );
-  const { downPct, intervals, unknownEnd, unknownIntervals, unknownPct, unknownSeconds, unknownStart, upPct } = metrics;
+function buildUptimeSubtargetEntry(
+  target,
+  data,
+  days,
+  now,
+  windowStart,
+  windowSeconds,
+) {
+  const metrics = uptimeMetrics(target, data, now, windowStart, windowSeconds);
+  const {
+    downPct,
+    intervals,
+    unknownEnd,
+    unknownIntervals,
+    unknownPct,
+    unknownSeconds,
+    unknownStart,
+    upPct,
+  } = metrics;
   const entry = document.createElement("div");
   entry.className = "uptime-entry is-child is-compact";
 
@@ -1210,7 +1374,10 @@ function buildUptimeSubtargetEntry(target, data, days, now, windowStart, windowS
   up.setAttribute("stroke-dasharray", `${upPct} ${100 - upPct}`);
   up.setAttribute("stroke-dashoffset", `${-(unknownPct + downPct)}`);
 
-  const unknown = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+  const unknown = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "circle",
+  );
   unknown.setAttribute("class", "pie-unknown");
   unknown.setAttribute("cx", "21");
   unknown.setAttribute("cy", "21");
@@ -1218,7 +1385,12 @@ function buildUptimeSubtargetEntry(target, data, days, now, windowStart, windowS
   unknown.setAttribute("stroke-dasharray", `${unknownPct} ${100 - unknownPct}`);
   unknown.setAttribute("stroke-dashoffset", "0");
 
-  const unavailableTooltip = createUnavailableTooltip(unknownStart, unknownEnd, unknownSeconds, unknownIntervals);
+  const unavailableTooltip = createUnavailableTooltip(
+    unknownStart,
+    unknownEnd,
+    unknownSeconds,
+    unknownIntervals,
+  );
   if (unknownPct > 0) {
     bindHoverTooltip(unknown, unavailableTooltip);
   }
@@ -1254,14 +1426,28 @@ function buildUptimeSubtargetEntry(target, data, days, now, windowStart, windowS
 
   const setSummary = (mode) => {
     const summary = summaryForMode(metrics, days, mode, true);
-    uptime.textContent = mode === "up" ? `${summary.value} uptime` : summary.value;
+    uptime.textContent =
+      mode === "up" ? `${summary.value} uptime` : summary.value;
     downtime.textContent = summary.detail;
   };
-  bindPieSegmentSelection([
-    { element: up, enabled: upPct > 0, label: "Focus uptime", mode: "up" },
-    { element: down, enabled: downPct > 0, label: "Focus downtime", mode: "down" },
-    { element: unknown, enabled: unknownPct > 0, label: "Focus données indisponibles", mode: "unknown" }
-  ], setSummary);
+  bindPieSegmentSelection(
+    [
+      { element: up, enabled: upPct > 0, label: "Focus uptime", mode: "up" },
+      {
+        element: down,
+        enabled: downPct > 0,
+        label: "Focus downtime",
+        mode: "down",
+      },
+      {
+        element: unknown,
+        enabled: unknownPct > 0,
+        label: "Focus données indisponibles",
+        mode: "unknown",
+      },
+    ],
+    setSummary,
+  );
 
   row.append(pieWrap, content);
   entry.append(row);
@@ -1269,14 +1455,17 @@ function buildUptimeSubtargetEntry(target, data, days, now, windowStart, windowS
 }
 
 function buildUptimeEntry(target, data, days, now, windowStart, windowSeconds) {
-  const metrics = uptimeMetrics(
-    target,
-    data,
-    now,
-    windowStart,
-    windowSeconds
-  );
-  const { downPct, intervals, unknownEnd, unknownIntervals, unknownPct, unknownSeconds, unknownStart, upPct } = metrics;
+  const metrics = uptimeMetrics(target, data, now, windowStart, windowSeconds);
+  const {
+    downPct,
+    intervals,
+    unknownEnd,
+    unknownIntervals,
+    unknownPct,
+    unknownSeconds,
+    unknownStart,
+    upPct,
+  } = metrics;
   const entry = document.createElement("div");
   entry.className = "uptime-entry";
 
@@ -1307,7 +1496,10 @@ function buildUptimeEntry(target, data, days, now, windowStart, windowSeconds) {
   up.setAttribute("stroke-dasharray", `${upPct} ${100 - upPct}`);
   up.setAttribute("stroke-dashoffset", `${-(unknownPct + downPct)}`);
 
-  const unknown = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+  const unknown = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "circle",
+  );
   unknown.setAttribute("class", "pie-unknown");
   unknown.setAttribute("cx", "21");
   unknown.setAttribute("cy", "21");
@@ -1315,7 +1507,12 @@ function buildUptimeEntry(target, data, days, now, windowStart, windowSeconds) {
   unknown.setAttribute("stroke-dasharray", `${unknownPct} ${100 - unknownPct}`);
   unknown.setAttribute("stroke-dashoffset", "0");
 
-  const unavailableTooltip = createUnavailableTooltip(unknownStart, unknownEnd, unknownSeconds, unknownIntervals);
+  const unavailableTooltip = createUnavailableTooltip(
+    unknownStart,
+    unknownEnd,
+    unknownSeconds,
+    unknownIntervals,
+  );
   if (unknownPct > 0) {
     bindHoverTooltip(unknown, unavailableTooltip);
   }
@@ -1354,18 +1551,38 @@ function buildUptimeEntry(target, data, days, now, windowStart, windowSeconds) {
     metricDetail.textContent = summary.detail;
     center.textContent = summary.value;
   };
-  bindPieSegmentSelection([
-    { element: up, enabled: upPct > 0, label: "Focus uptime", mode: "up" },
-    { element: down, enabled: downPct > 0, label: "Focus downtime", mode: "down" },
-    { element: unknown, enabled: unknownPct > 0, label: "Focus données indisponibles", mode: "unknown" }
-  ], setSummary);
+  bindPieSegmentSelection(
+    [
+      { element: up, enabled: upPct > 0, label: "Focus uptime", mode: "up" },
+      {
+        element: down,
+        enabled: downPct > 0,
+        label: "Focus downtime",
+        mode: "down",
+      },
+      {
+        element: unknown,
+        enabled: unknownPct > 0,
+        label: "Focus données indisponibles",
+        mode: "unknown",
+      },
+    ],
+    setSummary,
+  );
 
   row.append(pieWrap, metric);
   entry.append(row);
   return entry;
 }
 
-function buildUptimeChildrenPanel(target, data, days, now, windowStart, windowSeconds) {
+function buildUptimeChildrenPanel(
+  target,
+  data,
+  days,
+  now,
+  windowStart,
+  windowSeconds,
+) {
   const children = Array.isArray(target.children) ? target.children : [];
   if (!children.length) {
     return null;
@@ -1381,8 +1598,24 @@ function buildUptimeChildrenPanel(target, data, days, now, windowStart, windowSe
   const list = document.createElement("div");
   list.className = "uptime-children-list";
   for (const child of children) {
-    list.append(buildUptimeSubtargetEntry(child, data, days, now, windowStart, windowSeconds));
-    const nestedPanel = buildUptimeChildrenPanel(child, data, days, now, windowStart, windowSeconds);
+    list.append(
+      buildUptimeSubtargetEntry(
+        child,
+        data,
+        days,
+        now,
+        windowStart,
+        windowSeconds,
+      ),
+    );
+    const nestedPanel = buildUptimeChildrenPanel(
+      child,
+      data,
+      days,
+      now,
+      windowStart,
+      windowSeconds,
+    );
     if (nestedPanel) {
       list.append(nestedPanel);
     }
@@ -1402,10 +1635,19 @@ function renderUptime(data, days, panel) {
 
   for (const target of targets) {
     const status = directChildrenStatus(target, false);
-    const childrenPanel = buildUptimeChildrenPanel(target, data, days, now, windowStart, windowSeconds);
+    const childrenPanel = buildUptimeChildrenPanel(
+      target,
+      data,
+      days,
+      now,
+      windowStart,
+      windowSeconds,
+    );
     const body = document.createElement("div");
     body.className = `uptime-card-body${childrenPanel ? " has-children" : ""}`;
-    body.append(buildUptimeEntry(target, data, days, now, windowStart, windowSeconds));
+    body.append(
+      buildUptimeEntry(target, data, days, now, windowStart, windowSeconds),
+    );
     if (childrenPanel) {
       body.append(childrenPanel);
     }
@@ -1483,7 +1725,7 @@ async function loadStatus() {
       status: response.status,
       statusText: response.statusText,
       contentType: response.headers.get("content-type"),
-      url: response.url
+      url: response.url,
     });
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);
@@ -1493,7 +1735,7 @@ async function loadStatus() {
     const rawBody = await response.text();
     console.debug("[status] body received", {
       bytes: rawBody.length,
-      preview: rawBody.slice(0, 160)
+      preview: rawBody.slice(0, 160),
     });
 
     let data;
@@ -1502,7 +1744,7 @@ async function loadStatus() {
     } catch (error) {
       console.error("[status] invalid JSON", {
         error,
-        preview: rawBody.slice(0, 500)
+        preview: rawBody.slice(0, 500),
       });
       throw error;
     }
@@ -1512,8 +1754,12 @@ async function loadStatus() {
       schemaVersion: data.schema_version,
       updatedAt: data.updated_at,
       targets: Array.isArray(data.targets) ? data.targets.length : "invalid",
-      incidents: Array.isArray(data.incidents) ? data.incidents.length : "invalid",
-      externalStatus: Array.isArray(data.external_status) ? data.external_status.length : "invalid"
+      incidents: Array.isArray(data.incidents)
+        ? data.incidents.length
+        : "invalid",
+      externalStatus: Array.isArray(data.external_status)
+        ? data.external_status.length
+        : "invalid",
     });
     render(data);
     console.debug("[status] render complete");
@@ -1526,7 +1772,8 @@ async function loadStatus() {
     updatedAt.textContent = "-";
     targetCount.textContent = "-";
     retentionDays.textContent = "-";
-    panels["24h"].textContent = `Impossible de charger status.json. Étape: ${step}. ${error.message || error}`;
+    panels["24h"].textContent =
+      `Impossible de charger status.json. Étape: ${step}. ${error.message || error}`;
   } finally {
     statusRefreshInFlight = false;
   }

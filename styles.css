@@ -37,7 +37,14 @@ body {
   min-height: 100vh;
   background: var(--bg);
   color: var(--text);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
 }
 
 .shell {
@@ -118,7 +125,9 @@ h1 {
   border-color: #22c55e;
   background: var(--ok-bg);
   color: var(--ok);
-  box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.8), 0 0 12px rgba(34, 197, 94, 0.45);
+  box-shadow:
+    0 0 0 1px rgba(34, 197, 94, 0.8),
+    0 0 12px rgba(34, 197, 94, 0.45);
 }
 
 .summary.is-down,
@@ -149,23 +158,33 @@ h1 {
 .timeline-card.is-up,
 .uptime-card.is-up {
   border-color: #22c55e;
-  box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.45), 0 0 14px rgba(34, 197, 94, 0.22), var(--shadow);
+  box-shadow:
+    0 0 0 1px rgba(34, 197, 94, 0.45),
+    0 0 14px rgba(34, 197, 94, 0.22),
+    var(--shadow);
 }
 
 .timeline-card.is-degraded,
 .uptime-card.is-degraded {
   border-color: #f59e0b;
-  box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.6), 0 0 18px rgba(245, 158, 11, 0.38), var(--shadow);
+  box-shadow:
+    0 0 0 1px rgba(245, 158, 11, 0.6),
+    0 0 18px rgba(245, 158, 11, 0.38),
+    var(--shadow);
 }
 
 .timeline-card.is-down,
 .uptime-card.is-down {
   border-color: #ef4444;
-  box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.6), 0 0 18px rgba(239, 68, 68, 0.38), var(--shadow);
+  box-shadow:
+    0 0 0 1px rgba(239, 68, 68, 0.6),
+    0 0 18px rgba(239, 68, 68, 0.38),
+    var(--shadow);
 }
 
 @keyframes statusPulseWarn {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 7px rgba(245, 158, 11, 0.55);
   }
 
@@ -175,7 +194,8 @@ h1 {
 }
 
 @keyframes statusPulseDown {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 7px rgba(239, 68, 68, 0.65);
   }
 
@@ -185,22 +205,32 @@ h1 {
 }
 
 @keyframes badgeGlowWarn {
-  0%, 100% {
-    box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.65), 0 0 8px rgba(245, 158, 11, 0.35);
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 1px rgba(245, 158, 11, 0.65),
+      0 0 8px rgba(245, 158, 11, 0.35);
   }
 
   50% {
-    box-shadow: 0 0 0 1px rgba(245, 158, 11, 1), 0 0 18px rgba(245, 158, 11, 0.8);
+    box-shadow:
+      0 0 0 1px rgba(245, 158, 11, 1),
+      0 0 18px rgba(245, 158, 11, 0.8);
   }
 }
 
 @keyframes badgeGlowDown {
-  0%, 100% {
-    box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.7), 0 0 9px rgba(239, 68, 68, 0.45);
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 1px rgba(239, 68, 68, 0.7),
+      0 0 9px rgba(239, 68, 68, 0.45);
   }
 
   50% {
-    box-shadow: 0 0 0 1px rgba(239, 68, 68, 1), 0 0 20px rgba(239, 68, 68, 0.95);
+    box-shadow:
+      0 0 0 1px rgba(239, 68, 68, 1),
+      0 0 20px rgba(239, 68, 68, 0.95);
   }
 }
 
@@ -335,7 +365,11 @@ h1 {
 
 .timeline-card.is-unknown,
 .uptime-card.is-unknown {
-  background: linear-gradient(180deg, rgba(148, 163, 184, 0.16), var(--surface) 58%);
+  background: linear-gradient(
+    180deg,
+    rgba(148, 163, 184, 0.16),
+    var(--surface) 58%
+  );
 }
 
 .timeline-card.is-degraded,
@@ -346,25 +380,36 @@ h1 {
 .timeline-card.is-up,
 .uptime-card.is-up {
   border-color: #22c55e;
-  box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.45), 0 0 14px rgba(34, 197, 94, 0.22), var(--shadow);
+  box-shadow:
+    0 0 0 1px rgba(34, 197, 94, 0.45),
+    0 0 14px rgba(34, 197, 94, 0.22),
+    var(--shadow);
 }
 
 .timeline-card.is-degraded,
 .uptime-card.is-degraded {
   border-color: #f59e0b;
-  box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.6), 0 0 18px rgba(245, 158, 11, 0.38), var(--shadow);
+  box-shadow:
+    0 0 0 1px rgba(245, 158, 11, 0.6),
+    0 0 18px rgba(245, 158, 11, 0.38),
+    var(--shadow);
 }
 
 .timeline-card.is-unknown,
 .uptime-card.is-unknown {
   border-color: var(--unknown);
-  box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.45), var(--shadow);
+  box-shadow:
+    0 0 0 1px rgba(148, 163, 184, 0.45),
+    var(--shadow);
 }
 
 .timeline-card.is-down,
 .uptime-card.is-down {
   border-color: #ef4444;
-  box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.6), 0 0 18px rgba(239, 68, 68, 0.38), var(--shadow);
+  box-shadow:
+    0 0 0 1px rgba(239, 68, 68, 0.6),
+    0 0 18px rgba(239, 68, 68, 0.38),
+    var(--shadow);
 }
 
 .status-head {
@@ -434,7 +479,11 @@ h1 {
   height: 24px;
   border-radius: 4px;
   background: var(--ok);
-  transition: opacity 160ms ease, transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    filter 160ms ease;
 }
 
 .slot.has-marker::before {
@@ -469,15 +518,21 @@ h1 {
   opacity: 1;
   filter: saturate(1.2);
   transform: scaleY(1.28);
-  box-shadow: 0 0 0 1px rgba(248, 250, 252, 0.86), 0 0 18px rgba(148, 163, 184, 0.58);
+  box-shadow:
+    0 0 0 1px rgba(248, 250, 252, 0.86),
+    0 0 18px rgba(148, 163, 184, 0.58);
 }
 
 .timeline.is-highlighting .slot.is-period-highlight.is-down {
-  box-shadow: 0 0 0 1px rgba(248, 250, 252, 0.88), 0 0 18px rgba(239, 68, 68, 0.6);
+  box-shadow:
+    0 0 0 1px rgba(248, 250, 252, 0.88),
+    0 0 18px rgba(239, 68, 68, 0.6);
 }
 
 .timeline.is-highlighting .slot.is-period-highlight.is-unknown {
-  box-shadow: 0 0 0 1px rgba(248, 250, 252, 0.88), 0 0 18px rgba(148, 163, 184, 0.72);
+  box-shadow:
+    0 0 0 1px rgba(248, 250, 252, 0.88),
+    0 0 18px rgba(148, 163, 184, 0.72);
 }
 
 .timeline-legend {
@@ -1064,7 +1119,9 @@ h1 {
 .pie-up,
 .pie-unknown,
 .pie-down {
-  transition: opacity 160ms ease, stroke-width 160ms ease;
+  transition:
+    opacity 160ms ease,
+    stroke-width 160ms ease;
 }
 
 .pie:has(.is-selected) .pie-up:not(.is-selected),
