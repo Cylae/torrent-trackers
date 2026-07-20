@@ -19,7 +19,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not(.light-theme) {
     --bg: #111827;
     --surface: #1f2937;
     --text: #f8fafc;
@@ -30,6 +30,18 @@
     --warn-bg: #463609;
     --shadow: none;
   }
+}
+
+:root.dark-theme {
+  --bg: #111827;
+  --surface: #1f2937;
+  --text: #f8fafc;
+  --muted: #bac4d5;
+  --border: #374151;
+  --ok-bg: #113b22;
+  --down-bg: #4a1717;
+  --warn-bg: #463609;
+  --shadow: none;
 }
 
 body {
@@ -59,6 +71,86 @@ body {
   justify-content: space-between;
   gap: 20px;
   margin-bottom: 24px;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.theme-toggle:hover {
+  background: var(--bg);
+}
+
+.theme-toggle .sun-icon {
+  display: none;
+}
+
+.theme-toggle .moon-icon {
+  display: block;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light-theme) .theme-toggle .sun-icon { display: block; }
+  :root:not(.light-theme) .theme-toggle .moon-icon { display: none; }
+}
+
+:root.dark-theme .theme-toggle .sun-icon { display: block; }
+:root.dark-theme .theme-toggle .moon-icon { display: none; }
+:root.light-theme .theme-toggle .sun-icon { display: none; }
+:root.light-theme .theme-toggle .moon-icon { display: block; }
+
+.summary-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.refresh-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.refresh-icon {
+  width: 14px;
+  height: 14px;
+  transform: rotate(-90deg);
+}
+
+.refresh-bg {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 4;
+}
+
+.refresh-progress {
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 4;
+  stroke-dasharray: 62.8318; /* 2 * pi * r (10) */
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.1s linear;
 }
 
 .eyebrow {

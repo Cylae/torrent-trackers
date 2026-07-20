@@ -12,12 +12,18 @@ const retentionDays = document.querySelector("#retention-days");
 const visitorCountMonth = document.querySelector("#visitor-count-month");
 const visitorCountTotal = document.querySelector("#visitor-count-total");
 const includeUnavailable = document.querySelector("#include-unavailable");
+const themeToggleBtn = document.querySelector("#theme-toggle");
+const refreshProgress = document.querySelector("#refresh-progress");
+const refreshText = document.querySelector("#refresh-text");
 
 let latestData = null;
 let includeUnavailableData = true;
 let statusRefreshInFlight = false;
 
 const refreshIntervalMs = 30000;
+let timeUntilRefresh = refreshIntervalMs;
+let countdownIntervalId = null;
+
 const dataUnavailableError =
   "La connectivité réseau locale du conteneur est indisponible.";
 const dataUnavailableMessage =
@@ -559,6 +565,33 @@ function getTargetTree(data) {
       roots.push(item);
     }
   }
+
+  // Sort roots and children so that degraded/down items bubble to the top.
+  function sortTargets(items) {
+    items.sort((a, b) => {
+      const statusA = aggregateStatus(a);
+      const statusB = aggregateStatus(b);
+
+      const rank = { "down": 3, "degraded": 2, "unknown": 1, "up": 0 };
+
+      const rankA = rank[statusA] || 0;
+      const rankB = rank[statusB] || 0;
+
+      if (rankA !== rankB) {
+        return rankB - rankA;
+      }
+
+      return (a.label || a.key || "").localeCompare(b.label || b.key || "");
+    });
+
+    for (const item of items) {
+      if (item.children && item.children.length > 0) {
+        sortTargets(item.children);
+      }
+    }
+  }
+
+  sortTargets(roots);
 
   return roots;
 }
@@ -1708,6 +1741,36 @@ if (includeUnavailable) {
   });
 }
 
+// Theme Toggle Logic
+function initTheme() {
+  const savedTheme = localStorage.getItem("theme");
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+  if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
+    document.documentElement.classList.add("dark-theme");
+    document.documentElement.classList.remove("light-theme");
+  } else {
+    document.documentElement.classList.add("light-theme");
+    document.documentElement.classList.remove("dark-theme");
+  }
+
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener("click", () => {
+      const isDark = document.documentElement.classList.contains("dark-theme");
+      if (isDark) {
+        document.documentElement.classList.replace("dark-theme", "light-theme");
+        localStorage.setItem("theme", "light");
+      } else {
+        document.documentElement.classList.remove("light-theme");
+        document.documentElement.classList.add("dark-theme");
+        localStorage.setItem("theme", "dark");
+      }
+    });
+  }
+}
+
+initTheme();
+
 async function loadStatus() {
   if (statusRefreshInFlight) {
     console.debug("[status] refresh skipped: request already in flight");
@@ -1775,17 +1838,48 @@ async function loadStatus() {
     panels["24h"].textContent =
       `Impossible de charger status.json. Étape: ${step}. ${error.message || error}`;
   } finally {
+    resetCountdown();
     statusRefreshInFlight = false;
   }
 }
 
+function updateCountdownUI() {
+  if (refreshProgress && refreshText) {
+    const secondsLeft = Math.ceil(timeUntilRefresh / 1000);
+    refreshText.textContent = `Actualisation dans ${secondsLeft}s`;
+
+    // Circular progress: max dashoffset is 62.8318, 0 is full.
+    const progressRatio = timeUntilRefresh / refreshIntervalMs;
+    const dashoffset = 62.8318 * (1 - progressRatio);
+    refreshProgress.style.strokeDashoffset = dashoffset;
+  }
+}
+
+function resetCountdown() {
+  timeUntilRefresh = refreshIntervalMs;
+  updateCountdownUI();
+}
+
+function startCountdown() {
+  if (countdownIntervalId) {
+    clearInterval(countdownIntervalId);
+  }
+
+  countdownIntervalId = setInterval(() => {
+    if (!document.hidden && !statusRefreshInFlight) {
+      timeUntilRefresh -= 1000;
+      if (timeUntilRefresh <= 0) {
+        loadStatus();
+      } else {
+        updateCountdownUI();
+      }
+    }
+  }, 1000);
+}
+
 loadStatus();
 fetchVisitorCount();
-setInterval(() => {
-  if (!document.hidden) {
-    loadStatus();
-  }
-}, refreshIntervalMs);
+startCountdown();
 
 document.addEventListener("visibilitychange", () => {
   if (!document.hidden) {
@@ -1793,4 +1887,8 @@ document.addEventListener("visibilitychange", () => {
   }
 });
 
-window.addEventListener("focus", loadStatus);
+window.addEventListener("focus", () => {
+  if (!statusRefreshInFlight) {
+    loadStatus();
+  }
+});
