@@ -4,6 +4,20 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light dark" />
+    <meta name="description" content="Dashboard for tracking the status and uptime of various torrent trackers." />
+    <meta name="keywords" content="torrent, tracker, status, uptime, monitoring" />
+    <meta name="author" content="Trackers Status Dashboard" />
+
+    <!-- OpenGraph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Trackers status" />
+    <meta property="og:description" content="Dashboard for tracking the status and uptime of various torrent trackers." />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:title" content="Trackers status" />
+    <meta property="twitter:description" content="Dashboard for tracking the status and uptime of various torrent trackers." />
+
     <title>Trackers status</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
@@ -14,9 +28,24 @@
           <p class="eyebrow">Monitoring trackers</p>
           <h1>Trackers status</h1>
         </div>
-        <div class="summary" id="summary">
-          <span class="summary-dot" aria-hidden="true"></span>
-          <span id="summary-text">Chargement</span>
+        <div class="header-controls">
+          <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode">
+            <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+            <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+          </button>
+          <div class="summary-wrapper">
+            <div class="summary" id="summary">
+              <span class="summary-dot" aria-hidden="true"></span>
+              <span id="summary-text">Chargement</span>
+            </div>
+            <div class="refresh-indicator">
+              <svg viewBox="0 0 24 24" class="refresh-icon">
+                <circle class="refresh-bg" cx="12" cy="12" r="10"></circle>
+                <circle class="refresh-progress" id="refresh-progress" cx="12" cy="12" r="10"></circle>
+              </svg>
+              <span id="refresh-text" class="refresh-text">Rafraîchissement...</span>
+            </div>
+          </div>
         </div>
       </header>
 
