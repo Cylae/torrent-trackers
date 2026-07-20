@@ -1,67 +1,79 @@
 <!doctype html>
 <html lang="fr">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="light dark">
-  <title>Trackers status</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <main class="shell">
-    <header class="topbar">
-      <div>
-        <p class="eyebrow">Monitoring trackers</p>
-        <h1>Trackers status</h1>
-      </div>
-      <div class="summary" id="summary">
-        <span class="summary-dot" aria-hidden="true"></span>
-        <span id="summary-text">Chargement</span>
-      </div>
-    </header>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Trackers status</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Monitoring trackers</p>
+          <h1>Trackers status</h1>
+        </div>
+        <div class="summary" id="summary">
+          <span class="summary-dot" aria-hidden="true"></span>
+          <span id="summary-text">Chargement</span>
+        </div>
+      </header>
 
-    <section class="meta" aria-label="Informations">
-      <div>
-        <span class="meta-label">Dernière mise à jour</span>
-        <strong id="updated-at">-</strong>
-      </div>
-      <div>
-        <span class="meta-label">Trackers</span>
-        <strong id="target-count">-</strong>
-      </div>
-      <div>
-        <span class="meta-label">Rétention</span>
-        <strong id="retention-days">30 jours</strong>
-      </div>
-      <div>
-        <span class="meta-label">Visites ce mois</span>
-        <strong id="visitor-count-month">-</strong>
-      </div>
-      <div>
-        <span class="meta-label">Visites total</span>
-        <strong id="visitor-count-total">-</strong>
-      </div>
-    </section>
+      <section class="meta" aria-label="Informations">
+        <div>
+          <span class="meta-label">Dernière mise à jour</span>
+          <strong id="updated-at">-</strong>
+        </div>
+        <div>
+          <span class="meta-label">Trackers</span>
+          <strong id="target-count">-</strong>
+        </div>
+        <div>
+          <span class="meta-label">Rétention</span>
+          <strong id="retention-days">30 jours</strong>
+        </div>
+        <div>
+          <span class="meta-label">Visites ce mois</span>
+          <strong id="visitor-count-month">-</strong>
+        </div>
+        <div>
+          <span class="meta-label">Visites total</span>
+          <strong id="visitor-count-total">-</strong>
+        </div>
+      </section>
 
-    <nav class="view-tabs" aria-label="Période">
-      <button class="tab is-active" type="button" data-view="24h">24h</button>
-      <button class="tab" type="button" data-view="7d">7j</button>
-      <button class="tab" type="button" data-view="30d">30j</button>
-    </nav>
+      <nav class="view-tabs" aria-label="Période">
+        <button class="tab is-active" type="button" data-view="24h">24h</button>
+        <button class="tab" type="button" data-view="7d">7j</button>
+        <button class="tab" type="button" data-view="30d">30j</button>
+      </nav>
 
-    <label class="history-toggle">
-      <input id="include-unavailable" type="checkbox" checked>
-      <span>Afficher les données indisponibles</span>
-    </label>
+      <label class="history-toggle">
+        <input id="include-unavailable" type="checkbox" checked />
+        <span>Afficher les données indisponibles</span>
+      </label>
 
-    <p class="history-note">
-      Donnée historique disponible seulement à partir du 05/05 à 12h
-    </p>
+      <p class="history-note">
+        Donnée historique disponible seulement à partir du 05/05 à 12h
+      </p>
 
-    <section class="status-panel is-active" id="view-24h" aria-label="État des dernières 24 heures"></section>
-    <section class="status-panel" id="view-7d" aria-label="Uptime des 7 derniers jours"></section>
-    <section class="status-panel" id="view-30d" aria-label="Uptime des 30 derniers jours"></section>
-  </main>
-  <script src="app.js"></script>
-</body>
+      <section
+        class="status-panel is-active"
+        id="view-24h"
+        aria-label="État des dernières 24 heures"
+      ></section>
+      <section
+        class="status-panel"
+        id="view-7d"
+        aria-label="Uptime des 7 derniers jours"
+      ></section>
+      <section
+        class="status-panel"
+        id="view-30d"
+        aria-label="Uptime des 30 derniers jours"
+      ></section>
+    </main>
+    <script src="app.js"></script>
+  </body>
 </html>
